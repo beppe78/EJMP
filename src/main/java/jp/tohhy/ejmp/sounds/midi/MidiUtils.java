@@ -1,4 +1,4 @@
-package jp.tohhy.ejmp.midi;
+package jp.tohhy.ejmp.sounds.midi;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
@@ -43,7 +43,7 @@ public class MidiUtils {
          * http://www.jsresources.org/examples/SendSysex.java.html
          */
         try {
-            SysexMessage sysexMessage = new SysexMessage();
+            final SysexMessage sysexMessage = new SysexMessage();
             sysexMessage.setMessage(abMessage, abMessage.length);
             synth.getReceiver().send(sysexMessage, -1);
         } catch (MidiUnavailableException e) {

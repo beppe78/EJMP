@@ -1,4 +1,4 @@
-package jp.tohhy.ejmp.midi;
+package jp.tohhy.ejmp.sounds.midi;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,8 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Synthesizer;
 
-import jp.tohhy.ejmp.MediaPlayer;
+import jp.tohhy.ejmp.interfaces.Media;
+import jp.tohhy.ejmp.interfaces.MediaPlayer;
 
 import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
@@ -31,7 +32,7 @@ public class MIDIPlayer implements MediaPlayer {
 
     public void play() {
         try {
-            if(getPlaying() != null) {
+            if(playing != null) {
                 if(!sequencer.isOpen())
                     sequencer.open();
                 sequencer.setSequence(getPlaying().getSequence());
@@ -69,8 +70,17 @@ public class MIDIPlayer implements MediaPlayer {
         this.playing = new MIDISound(file);
     }
 
-    public File getMedia() {
-        return playing.getFile();
+    public void setMedia(String resourcePath) {
+        this.playing = new MIDISound(resourcePath);
+    }
+
+    public void setMedia(Media media) {
+        if(media instanceof MIDISound)
+            this.playing = (MIDISound) media;
+    }
+
+    public Media getMedia() {
+        return playing;
     }
 
     /**
@@ -170,5 +180,9 @@ public class MIDIPlayer implements MediaPlayer {
 
     public MIDISound getPlaying() {
         return playing;
+    }
+
+    public void run() {
+        // TODO 自動生成されたメソッド・スタブ
     }
 }

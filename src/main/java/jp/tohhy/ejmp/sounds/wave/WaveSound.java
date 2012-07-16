@@ -1,4 +1,4 @@
-package jp.tohhy.ejmp.wave;
+package jp.tohhy.ejmp.sounds.wave;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import jp.tohhy.ejmp.Media;
+import jp.tohhy.ejmp.interfaces.Media;
+import jp.tohhy.ejmp.utils.StreamUtils;
 
 public class WaveSound extends Media {
     private AudioInputStream audio;
@@ -16,7 +17,7 @@ public class WaveSound extends Media {
         super(resourcePath);
         try {
             this.audio = AudioSystem.getAudioInputStream(
-                    Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath));
+                    StreamUtils.getResourceAsStream(resourcePath));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (UnsupportedAudioFileException e) {
@@ -28,7 +29,7 @@ public class WaveSound extends Media {
         super(file);
         try {
             this.audio = AudioSystem.getAudioInputStream(
-                    Thread.currentThread().getContextClassLoader().getResourceAsStream(file.getAbsolutePath()));
+                    StreamUtils.getFileAsStream(file));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (UnsupportedAudioFileException e) {
@@ -48,4 +49,8 @@ public class WaveSound extends Media {
         return audio;
     }
 
+    @Override
+    public void dispose() throws Exception {
+        audio.close();
+    }
 }
