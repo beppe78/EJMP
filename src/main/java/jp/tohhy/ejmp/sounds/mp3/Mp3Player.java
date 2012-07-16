@@ -15,6 +15,7 @@ public class Mp3Player implements MediaPlayer {
     private Mp3Sound playing;
     private PlayThread thread;
     private boolean isRepeat = false;
+    private boolean isPlaying = false;
     private int stoppedLastByte = 0;
 
     private Playable threadPlay = new Playable() {
@@ -80,6 +81,8 @@ public class Mp3Player implements MediaPlayer {
     }
 
     public void play() {
+        if(isPlaying)
+            return;
         new Thread(new Runnable() {
             public void run() {
                 if(player == null) {
@@ -96,6 +99,7 @@ public class Mp3Player implements MediaPlayer {
                         e.printStackTrace();
                     }
                 }
+                isPlaying = true;
                 thread = new PlayThread(threadPlay);
                 thread.start();
             }
@@ -120,13 +124,14 @@ public class Mp3Player implements MediaPlayer {
                 this.player = null;
             }
             playing.reload();
+            isPlaying = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public boolean isPlaying() {
-        return false;
+        return isPlaying;
     }
 
     public boolean isRepeat() {

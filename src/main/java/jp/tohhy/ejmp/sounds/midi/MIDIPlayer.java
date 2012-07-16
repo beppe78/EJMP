@@ -27,18 +27,22 @@ public class MIDIPlayer implements MediaPlayer {
     }
 
     public void play() {
-        try {
-            if(playing != null) {
-                playing.getSequencer().getTransmitter().setReceiver(this.synth.getReceiver());
-                playing.getSequencer().start();
-                Thread.sleep(100);
-                setVolume(volume);
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    if(playing != null) {
+                        playing.getSequencer().getTransmitter().setReceiver(MIDIPlayer.this.synth.getReceiver());
+                        playing.getSequencer().start();
+                        Thread.sleep(100);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (MidiUnavailableException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (MidiUnavailableException e) {
-            e.printStackTrace();
-        }
+        }).start();
+
     }
 
 
@@ -147,10 +151,10 @@ public class MIDIPlayer implements MediaPlayer {
         return volume;
     }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
-        MidiUtils.applyVolume(synth, volume);
-    }
+//    public void setVolume(int volume) {
+//        this.volume = volume;
+//        MidiUtils.applyVolume(synth, volume);
+//    }
 
     public void setPlaying(MIDISound playing) {
         if(isPlaying()) {

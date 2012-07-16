@@ -8,7 +8,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import jp.tohhy.ejmp.sounds.SoundPlayer;
 
@@ -16,9 +15,9 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/sound.au");
+        player.setMedia("resources/sound.mid");
         player.setRepeat(true);
-        player.play();
+
 
         Timer timer = new Timer();
 
@@ -44,7 +43,7 @@ public class Tester {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
+        player.play();
 //        timer.schedule(new TimerTask() {
 //            @Override
 //            public void run() {

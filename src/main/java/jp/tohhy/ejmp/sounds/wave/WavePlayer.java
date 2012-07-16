@@ -12,14 +12,70 @@ import javax.sound.sampled.SourceDataLine;
 
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
+import jp.tohhy.ejmp.utils.PlayThread;
+import jp.tohhy.ejmp.utils.PlayThread.Playable;
 
 public class WavePlayer implements MediaPlayer {
     private WaveSound playing;
-    private Thread playThread = null;
+    private PlayThread thread = null;
     private boolean isPreLoad = false;
     private boolean isRepeat = false;
-    private boolean isStopped = false;
+    private boolean isPlaying = false;
+    private Playable threadPlay = new Playable() {
+        public void play(PlayThread thread) {
+            isPlaying = true;
+            final AudioFormat format = playing.getAudio().getFormat();
+            if(isPreLoad) {
+                //短い音声ファイル等でプリロードするパターン.
+                //長いwavファイルは容量が大きくなりがちなためこちらで読むとメモリを圧迫してしまう
+                Clip clip = null;
+                try {
+                    clip = AudioSystem.getClip();
+                    clip.open(playing.getAudio());
+                    clip.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } finally {
+                    clip.drain();
+                    clip.close();
+                }
+            } else {
+                //長い音声ファイル等でプリロードせずに少しずつ読み込んでいくパターン.
+                //デフォルトはこちらにする
+                final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+                final byte[] buffer = new byte[65536];
+                SourceDataLine line = null;
+                try {
+                    line = (SourceDataLine) AudioSystem.getLine(info);
+                    line.open(format, buffer.length);
+                    line.start();
+                    int readBytes = 0;
+                    while (readBytes != -1) {
+                        if(thread.isEnd()) {
+                            break;
+                        }
+                        readBytes = playing.getAudio().read(buffer, 0, buffer.length);
+                        if (readBytes != -1) {
+                            line.write(buffer, 0, readBytes);
+                        }
+                    }
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    line.close();
+                }
+            }
 
+            //リピートなら繰り返す
+            if(isPlaying && isRepeat) {
+                WavePlayer.this.play();
+            }
+        }
+    };
     public void setPlaying(WaveSound playing) {
         this.playing = playing;
     }
@@ -29,62 +85,10 @@ public class WavePlayer implements MediaPlayer {
     }
 
     public void play() {
-        playThread = new Thread(new Runnable() {
-            public void run() {
-                final AudioFormat format = playing.getAudio().getFormat();
-                if(isPreLoad) {
-                    //短い音声ファイル等でプリロードするパターン.
-                    //長いwavファイルは容量が大きくなりがちなためこちらで読むとメモリを圧迫してしまう
-                    Clip clip = null;
-                    try {
-                        clip = AudioSystem.getClip();
-                        clip.open(playing.getAudio());
-                        clip.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (LineUnavailableException e) {
-                        e.printStackTrace();
-                    } finally {
-                        clip.drain();
-                        clip.close();
-                    }
-                } else {
-                    //長い音声ファイル等でプリロードせずに少しずつ読み込んでいくパターン.
-                    //デフォルトはこちらにする
-                    final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-                    final byte[] buffer = new byte[65536];
-                    SourceDataLine line = null;
-                    try {
-                        line = (SourceDataLine) AudioSystem.getLine(info);
-                        line.open(format, buffer.length);
-                        line.start();
-                        int readBytes = 0;
-                        while (readBytes != -1) {
-                            if(isStopped) {
-                                break;
-                            }
-                            readBytes = playing.getAudio().read(buffer, 0, buffer.length);
-                            if (readBytes != -1) {
-                                line.write(buffer, 0, readBytes);
-                            }
-                        }
-                    } catch (LineUnavailableException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        line.close();
-                    }
-                }
-
-                //リピートなら繰り返す
-                if(!isStopped && isRepeat) {
-                    play();
-                }
-            }
-        }
-        );
-        playThread.start();
+        if(isPlaying)
+            return;
+        thread = new PlayThread(threadPlay);
+        thread.start();
     }
 
     public void setMedia(File file) {
@@ -105,21 +109,20 @@ public class WavePlayer implements MediaPlayer {
     }
 
     public void restart() {
+        stop();
         playing.reload();
+        thread.setEnd(true);
+        if(!isPlaying)
+            play();
     }
 
     public void stop() {
-        this.isStopped = true;
+        thread.setEnd(true);
+        this.isPlaying = false;
     }
 
     public boolean isPlaying() {
-        // TODO 自動生成されたメソッド・スタブ
-        return false;
-    }
-
-    public void run() {
-        // TODO 自動生成されたメソッド・スタブ
-
+        return isPlaying;
     }
 
     public boolean isRepeat() {
