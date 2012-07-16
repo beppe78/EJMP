@@ -10,14 +10,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import jp.tohhy.ejmp.sounds.SoundPlayer;
+import jp.tohhy.ejmp.sounds.wave.WavePlayer;
 
 public class Tester {
 
     public Tester() {
-        final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/sound.mid");
-        player.setRepeat(true);
-
+//        final SoundPlayer player = new SoundPlayer();
+        final WavePlayer player = new WavePlayer();
+        player.setMedia("resources/sound.wav");
+        player.setRepeat(false);
 
         Timer timer = new Timer();
 

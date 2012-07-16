@@ -10,16 +10,14 @@ import jp.tohhy.ejmp.sounds.midi.MIDISound;
 import jp.tohhy.ejmp.sounds.mp3.Mp3Sound;
 import jp.tohhy.ejmp.sounds.wave.WaveSound;
 
-import org.apache.commons.io.FilenameUtils;
-
 public class MediaUtils {
 
     public static Media createSuitableMedia(String resourcePath) {
-        return createSuitableMedia(FilenameUtils.getExtension(resourcePath), resourcePath);
+        return createSuitableMedia(FileUtils.getExtension(resourcePath), resourcePath);
     }
 
     public static Media createSuitableMedia(File file) {
-        return createSuitableMedia(FilenameUtils.getExtension(file.getName()), file);
+        return createSuitableMedia(FileUtils.getExtension(file.getName()), file);
     }
 
     /**
@@ -37,7 +35,7 @@ public class MediaUtils {
             return Mp3Sound.class;
         } else if(ext.equals("wma")) {
             //未対応
-        } else if(ext.equals("au") || ext.equals("au")) {
+        } else if(ext.equals("au")) {
             return AUSound.class;
         } else if(ext.equals("ogg") || ext.equals("ogx") || ext.equals("oga")) {
             //未対応

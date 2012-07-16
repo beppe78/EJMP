@@ -12,6 +12,7 @@ import jp.tohhy.ejmp.interfaces.MediaPlayer;
 import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
 
+@SuppressWarnings("restriction")
 public class MIDIPlayer implements MediaPlayer {
     private Synthesizer synth;
     private MIDISound playing;

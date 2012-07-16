@@ -59,6 +59,7 @@ public class WavePlayer implements MediaPlayer {
                         readBytes = playing.getAudio().read(buffer, 0, buffer.length);
                         if (readBytes != -1) {
                             line.write(buffer, 0, readBytes);
+                            line.drain();
                         }
                     }
                 } catch (LineUnavailableException e) {
@@ -73,6 +74,8 @@ public class WavePlayer implements MediaPlayer {
             //リピートなら繰り返す
             if(isPlaying && isRepeat) {
                 WavePlayer.this.play();
+            } else {
+                stop();
             }
         }
     };
@@ -87,8 +90,14 @@ public class WavePlayer implements MediaPlayer {
     public void play() {
         if(isPlaying)
             return;
-        thread = new PlayThread(threadPlay);
-        thread.start();
+        try {
+            if(playing.getAudio().available() <= 0)
+                playing.reload();
+            thread = new PlayThread(threadPlay);
+            thread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setMedia(File file) {

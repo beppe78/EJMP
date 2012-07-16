@@ -72,6 +72,8 @@ public class SoundPlayer implements MediaPlayer {
     /**
      * メディアの再生を停止する.
      * 停止後にplayを呼び出した場合、停止した時点から再開できる.
+     *
+     * ただし、AU形式の再生の場合のみ停止時は開始時点まで巻き戻される.
      */
     public void stop() {
         if(player != null)
