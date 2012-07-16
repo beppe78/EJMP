@@ -3,10 +3,7 @@ package jp.tohhy.ejmp.sounds.midi;
 import java.io.File;
 import java.io.IOException;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Sequencer;
 import javax.sound.midi.Synthesizer;
 
 import jp.tohhy.ejmp.interfaces.Media;
@@ -16,7 +13,6 @@ import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
 
 public class MIDIPlayer implements MediaPlayer {
-    private Sequencer sequencer;
     private Synthesizer synth;
     private MIDISound playing;
     private boolean isRepeat = false;
@@ -33,37 +29,30 @@ public class MIDIPlayer implements MediaPlayer {
     public void play() {
         try {
             if(playing != null) {
-                if(!sequencer.isOpen())
-                    sequencer.open();
-                sequencer.setSequence(getPlaying().getSequence());
-                sequencer.start();
+                playing.getSequencer().getTransmitter().setReceiver(this.synth.getReceiver());
+                playing.getSequencer().start();
                 Thread.sleep(100);
                 setVolume(volume);
             }
-        } catch (InvalidMidiDataException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (MidiUnavailableException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
 
     public void restart() {
-        if(sequencer.isOpen()) {
-            sequencer.stop();
-            sequencer.setTickPosition(0);
-        }
+        playing.reload();
         play();
     }
 
     public void stop() {
-        sequencer.stop();
+        playing.getSequencer().stop();
     }
 
     public boolean isPlaying() {
-        return sequencer.isRunning();
+        return playing.getSequencer().isRunning();
     }
 
     public void setMedia(File file) {
@@ -95,16 +84,13 @@ public class MIDIPlayer implements MediaPlayer {
             this.synth.close();
             this.synth = null;
         }
-        if(this.sequencer != null) {
-            this.sequencer.close();
-            this.sequencer = null;
-        }
         System.gc();
         this.synth = synth;
-        this.sequencer = MidiSystem.getSequencer(false);
-        this.sequencer.getTransmitter().setReceiver(this.synth.getReceiver());
+        if(this.playing != null) {
+            this.playing.reload();
+
+        }
         this.synth.open();
-        this.sequencer.open();
     }
 
     /**
@@ -138,20 +124,16 @@ public class MIDIPlayer implements MediaPlayer {
         }
     }
 
-
-
     /*
      * getter/setter
      */
-
     public void setTick(long tick) {
-        this.sequencer.setTickPosition(tick);
+        this.playing.getSequencer().setTickPosition(tick);
     }
 
     public long getTick() {
-        return this.sequencer.getTickPosition();
+        return this.playing.getSequencer().getTickPosition();
     }
-
 
     public void setRepeat(boolean isRepeat) {
         this.isRepeat = isRepeat;
@@ -171,11 +153,12 @@ public class MIDIPlayer implements MediaPlayer {
     }
 
     public void setPlaying(MIDISound playing) {
-        if(sequencer.isOpen()) {
-            sequencer.stop();
-            sequencer.setTickPosition(0);
+        if(isPlaying()) {
+            this.playing = playing;
+            play();
+        } else {
+            this.playing = playing;
         }
-        this.playing = playing;
     }
 
     public MIDISound getPlaying() {

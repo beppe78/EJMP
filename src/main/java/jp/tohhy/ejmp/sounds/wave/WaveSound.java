@@ -1,6 +1,7 @@
 package jp.tohhy.ejmp.sounds.wave;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioInputStream;
@@ -16,8 +17,7 @@ public class WaveSound extends Media {
     public WaveSound(String resourcePath) {
         super(resourcePath);
         try {
-            this.audio = AudioSystem.getAudioInputStream(
-                    StreamUtils.getResourceAsStream(resourcePath));
+            loadAudio(resourcePath);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (UnsupportedAudioFileException e) {
@@ -28,8 +28,7 @@ public class WaveSound extends Media {
     public WaveSound(File file) {
         super(file);
         try {
-            this.audio = AudioSystem.getAudioInputStream(
-                    StreamUtils.getFileAsStream(file));
+            loadAudio(file);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (UnsupportedAudioFileException e) {
@@ -52,5 +51,34 @@ public class WaveSound extends Media {
     @Override
     public void dispose() throws Exception {
         audio.close();
+    }
+
+    private void loadAudio(String resourcePath)
+    throws UnsupportedAudioFileException, IOException {
+        this.audio = AudioSystem.getAudioInputStream(
+                StreamUtils.getResourceAsStream(resourcePath));
+    }
+
+    private void loadAudio(File file)
+    throws FileNotFoundException, UnsupportedAudioFileException, IOException {
+        this.audio = AudioSystem.getAudioInputStream(
+                StreamUtils.getFileAsStream(file));
+    }
+
+    @Override
+    public void reload() {
+        try {
+            if(audio != null)
+                audio.close();
+            if(getFile() != null && getFile().exists()) {
+                loadAudio(getFile());
+            } else if(getResourcePath() != null) {
+                loadAudio(getResourcePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        }
     }
 }

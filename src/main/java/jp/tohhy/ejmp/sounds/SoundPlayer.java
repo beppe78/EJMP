@@ -60,8 +60,11 @@ public class SoundPlayer implements MediaPlayer {
     }
 
     public void restart() {
-        if(player != null)
+        if(player != null) {
             player.restart();
+        } else {
+            play();
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package jp.tohhy.ejmp.sounds.mp3;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.utils.StreamUtils;
@@ -24,26 +25,6 @@ public class Mp3Sound extends Media {
         loadStream(getResourcePath());
     }
 
-    public void streamReload() {
-        if(getFile() != null) {
-            try {
-                loadStream(getFile());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else {
-            loadStream(getResourcePath());
-        }
-    }
-
-    private void loadStream(File file) throws FileNotFoundException {
-        this.setStream(StreamUtils.getFileAsStream(file));
-    }
-
-    private void loadStream(String resourcePath) {
-        this.setStream(StreamUtils.getResourceAsStream(resourcePath));
-    }
-
     @Override
     public MediaType getMediaType() {
         return MediaType.MP3;
@@ -59,8 +40,31 @@ public class Mp3Sound extends Media {
     }
 
     public void dispose() throws Exception {
-        if (stream != null)
+        if(stream != null)
             stream.close();
+    }
+
+    @Override
+    public void reload() {
+        try {
+            if(stream != null)
+                stream.close();
+            if(getFile() != null && getFile().exists()) {
+                loadStream(getFile());
+            } else if(getResourcePath() != null) {
+                loadStream(getResourcePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadStream(File file) throws FileNotFoundException {
+        this.setStream(StreamUtils.getFileAsStream(file));
+    }
+
+    private void loadStream(String resourcePath) {
+        this.setStream(StreamUtils.getResourceAsStream(resourcePath));
     }
 
 }

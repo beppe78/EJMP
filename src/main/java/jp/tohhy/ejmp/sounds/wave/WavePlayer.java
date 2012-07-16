@@ -20,10 +20,6 @@ public class WavePlayer implements MediaPlayer {
     private boolean isRepeat = false;
     private boolean isStopped = false;
 
-    public WavePlayer() {
-        // TODO 自動生成されたコンストラクター・スタブ
-    }
-
     public void setPlaying(WaveSound playing) {
         this.playing = playing;
     }
@@ -35,50 +31,55 @@ public class WavePlayer implements MediaPlayer {
     public void play() {
         playThread = new Thread(new Runnable() {
             public void run() {
-                try {
-                    final AudioFormat format = playing.getAudio().getFormat();
-                    //pattern 1
-                    if(isPreLoad) {
-                        Clip clip = AudioSystem.getClip();
-                        try {
-                            clip.open(playing.getAudio());
-                            clip.start();
-                        } finally {
-                            clip.drain();
-                            clip.close();
-                        }
-                    } else {
-                        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-                        SourceDataLine line =  (SourceDataLine) AudioSystem.getLine(info);
-                        byte[] buffer = new byte[65536];
-
-                        try {
-                            line.open(format, buffer.length);
-                            line.start();
-
-                            int numBytesRead = 0;
-                            while (numBytesRead != -1) {
-                                if(isStopped) {
-                                    break;
-                                }
-                                numBytesRead = playing.getAudio().read(buffer, 0, buffer.length);
-                                if (numBytesRead != -1) {
-                                    line.write(buffer, 0, numBytesRead);
-                                }
-                            }
-                        } finally {
-                            line.drain();
-                            line.close();
-                        }
-
+                final AudioFormat format = playing.getAudio().getFormat();
+                if(isPreLoad) {
+                    //短い音声ファイル等でプリロードするパターン.
+                    //長いwavファイルは容量が大きくなりがちなためこちらで読むとメモリを圧迫してしまう
+                    Clip clip = null;
+                    try {
+                        clip = AudioSystem.getClip();
+                        clip.open(playing.getAudio());
+                        clip.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (LineUnavailableException e) {
+                        e.printStackTrace();
+                    } finally {
+                        clip.drain();
+                        clip.close();
                     }
-                    if(!isStopped && isRepeat)
-                        play();
-                } catch (LineUnavailableException e) {
-                    e.printStackTrace();
+                } else {
+                    //長い音声ファイル等でプリロードせずに少しずつ読み込んでいくパターン.
+                    //デフォルトはこちらにする
+                    final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+                    final byte[] buffer = new byte[65536];
+                    SourceDataLine line = null;
+                    try {
+                        line = (SourceDataLine) AudioSystem.getLine(info);
+                        line.open(format, buffer.length);
+                        line.start();
+                        int readBytes = 0;
+                        while (readBytes != -1) {
+                            if(isStopped) {
+                                break;
+                            }
+                            readBytes = playing.getAudio().read(buffer, 0, buffer.length);
+                            if (readBytes != -1) {
+                                line.write(buffer, 0, readBytes);
+                            }
+                        }
+                    } catch (LineUnavailableException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        line.close();
+                    }
                 }
-                catch (IOException e) {
-                    e.printStackTrace();
+
+                //リピートなら繰り返す
+                if(!isStopped && isRepeat) {
+                    play();
                 }
             }
         }
@@ -104,7 +105,7 @@ public class WavePlayer implements MediaPlayer {
     }
 
     public void restart() {
-        playThread.start();
+        playing.reload();
     }
 
     public void stop() {

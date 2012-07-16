@@ -6,52 +6,34 @@ import java.io.InputStream;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequence;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
 
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.utils.StreamUtils;
 
 public class MIDISound extends Media {
-    private Sequence sequence = null;
+    private Sequencer sequencer;
 
     public MIDISound(String resourcePath) {
         super(resourcePath);
-        InputStream stream = null;
         try {
-            stream = StreamUtils.getResourceAsStream(resourcePath);
-            this.sequence = MidiSystem.getSequence(stream);
+            loadSequence(resourcePath);
         } catch (InvalidMidiDataException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if(stream != null)
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
         }
-    }
 
+    }
     public MIDISound(File file) {
         super(file);
-        InputStream stream = null;
         try {
-            stream = StreamUtils.getFileAsStream(file);
-            this.sequence = MidiSystem.getSequence(
-                    stream);
+            loadSequence(file);
         } catch (InvalidMidiDataException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if(stream != null)
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
         }
     }
 
@@ -59,16 +41,55 @@ public class MIDISound extends Media {
         return MediaType.MIDI;
     }
 
-    public void setSequence(Sequence sequence) {
-        this.sequence = sequence;
-    }
-
-    public Sequence getSequence() {
-        return sequence;
+    @Override
+    public void dispose() throws Exception {
+        if(sequencer != null)
+            sequencer.close();
     }
 
     @Override
-    public void dispose() throws Exception {
-        //MIDIでは特に何も行わなくてよい
+    public void reload() {
+        try {
+            if(sequencer != null)
+                sequencer.close();
+            if(getFile() != null && getFile().exists()) {
+                loadSequence(getFile());
+            } else if(getResourcePath() != null) {
+                loadSequence(getResourcePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadSequence(File file) throws InvalidMidiDataException, IOException {
+        try {
+            InputStream stream = StreamUtils.getFileAsStream(file);
+            this.sequencer = MidiSystem.getSequencer(false);
+            sequencer.setSequence(stream);
+            sequencer.open();
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadSequence(String resourcePath) throws InvalidMidiDataException, IOException {
+        try {
+            InputStream stream = StreamUtils.getResourceAsStream(resourcePath);
+            this.sequencer = MidiSystem.getSequencer(false);
+            sequencer.setSequence(stream);
+            sequencer.open();
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setSequencer(Sequencer sequencer) {
+        this.sequencer = sequencer;
+    }
+
+    public Sequencer getSequencer() {
+        return sequencer;
     }
 }

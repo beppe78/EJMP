@@ -32,6 +32,12 @@ public abstract class Media {
     }
 
     /**
+     * このメディアをファイルやリソースから再読み込みする.
+     * ストリームは初期化される.
+     */
+    public abstract void reload();
+
+    /**
      * このメディアの形式を返す.
      * @return このメディアの形式
      */
