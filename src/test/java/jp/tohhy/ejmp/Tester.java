@@ -4,8 +4,11 @@ import java.awt.event.ActionEvent;
 import java.util.Timer;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import jp.tohhy.ejmp.sounds.SoundPlayer;
 
@@ -13,20 +16,31 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/sound.mp3");
+        player.setMedia("resources/sound.au");
         player.setRepeat(true);
         player.play();
 
         Timer timer = new Timer();
 
         JFrame frame = new JFrame();
-        frame.add(new JButton(new AbstractAction("restart") {
+        Box box = new Box(BoxLayout.X_AXIS);
+        box.add(new JButton(new AbstractAction("play") {
+            public void actionPerformed(ActionEvent e) {
+                player.play();
+            }
+        }));
+        box.add(new JButton(new AbstractAction("stop") {
+            public void actionPerformed(ActionEvent e) {
+                player.stop();
+            }
+        }));
+        box.add(new JButton(new AbstractAction("restart") {
             public void actionPerformed(ActionEvent e) {
                 player.restart();
-                System.out.println("played!!");
             }
         }));
         frame.setBounds(100,100,300,200);
+        frame.add(box);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

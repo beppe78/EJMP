@@ -53,10 +53,12 @@ public class SoundPlayer implements MediaPlayer {
             if(player != null) player.stop();
             player = PlayerUtils.createSuitablePlayer(media);
         }
-        if(player.getMedia() != media)
-            player.setMedia(media);
-        player.setRepeat(isRepeat);
-        player.play();
+        if(player != null) {
+            if(player.getMedia() != media)
+                player.setMedia(media);
+            player.setRepeat(isRepeat);
+            player.play();
+        }
     }
 
     public void restart() {

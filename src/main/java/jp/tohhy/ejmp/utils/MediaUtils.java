@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import jp.tohhy.ejmp.interfaces.Media;
+import jp.tohhy.ejmp.sounds.au.AUSound;
 import jp.tohhy.ejmp.sounds.midi.MIDISound;
 import jp.tohhy.ejmp.sounds.mp3.Mp3Sound;
 import jp.tohhy.ejmp.sounds.wave.WaveSound;
@@ -36,6 +37,8 @@ public class MediaUtils {
             return Mp3Sound.class;
         } else if(ext.equals("wma")) {
             //未対応
+        } else if(ext.equals("au") || ext.equals("au")) {
+            return AUSound.class;
         } else if(ext.equals("ogg") || ext.equals("ogx") || ext.equals("oga")) {
             //未対応
         } else if(ext.equals("aac") || ext.equals("mp4") || ext.equals("m4a")) {

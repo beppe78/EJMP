@@ -2,6 +2,8 @@ package jp.tohhy.ejmp.utils;
 
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
+import jp.tohhy.ejmp.sounds.au.AUPlayer;
+import jp.tohhy.ejmp.sounds.au.AUSound;
 import jp.tohhy.ejmp.sounds.midi.MIDIPlayer;
 import jp.tohhy.ejmp.sounds.midi.MIDISound;
 import jp.tohhy.ejmp.sounds.mp3.Mp3Player;
@@ -47,6 +49,8 @@ public class PlayerUtils {
             return Mp3Player.class;
         } else if(media instanceof WaveSound) {
             return WavePlayer.class;
+        } else if(media instanceof AUSound) {
+            return AUPlayer.class;
         }
         return null;
     }
