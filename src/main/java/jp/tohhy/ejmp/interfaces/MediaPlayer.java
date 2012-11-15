@@ -44,6 +44,11 @@ public interface MediaPlayer {
      * メディアを頭から再生する.
      */
     public void restart();
+    
+    /**
+     * メディアを頭まで巻き戻す.
+     */
+    public void rewind();
 
     /**
      * メディアの再生を停止する.

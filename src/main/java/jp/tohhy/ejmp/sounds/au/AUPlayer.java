@@ -38,4 +38,9 @@ public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
         return (AUSound)getMedia();
     }
 
+    public void rewind() {
+        // TODO 自動生成されたメソッド・スタブ
+        
+    }
+
 }

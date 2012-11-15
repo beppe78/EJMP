@@ -20,23 +20,61 @@ public class SoundPlayer implements MediaPlayer {
     public SoundPlayer() {}
 
     /**
-     * 再生するメディアファイルを指定する.
+     * 新しく再生スレッドを生成し、メディアを再生する.
+     * 途中で停止されている場合はその停止位置から再開する.
      */
-    public void setMedia(File file) {
-        this.media = MediaUtils.createSuitableMedia(file);
+    public void play() {
+        new Thread(new Runnable() {
+            public void run() {
+                if(player == null || player.getClass() != PlayerUtils.getSuitablePlayerClass(media)) {
+                    if(player != null) player.stop();
+                    player = PlayerUtils.createSuitablePlayer(media);
+                }
+                if(player != null) {
+                    if(player.getMedia() != media)
+                        player.setMedia(media);
+                    player.setRepeat(isRepeat);
+                    player.play();
+                }
+            }
+        }).start();
     }
+
+    public void restart() {
+        new Thread(new Runnable() {
+            public void run() {
+                if(player != null) {
+                    player.restart();
+                } else {
+                    play();
+                }
+            }
+        }).start();
+    }
+
     /**
-     * 再生するメディアリソースのパスを指定する.
+     * メディアの再生を停止する.
+     * 停止後にplayを呼び出した場合、停止した時点から再開できる.
      */
-    public void setMedia(String resourcePath) {
-        this.media = MediaUtils.createSuitableMedia(resourcePath);
+    public void stop() {
+        new Thread(new Runnable() {
+            public void run() {
+                if(player != null)
+                    player.stop();
+            }
+        }).start();
+        
     }
-    /**
-     * 再生するメディアを指定する.
-     */
-    public void setMedia(Media media) {
-        this.media = media;
+
+    public void rewind() {
+        new Thread(new Runnable() {
+            public void run() {
+                if(player != null)
+                    player.rewind();
+            }
+        }).start();
     }
+
     /**
      * このプレイヤーにセットされているメディアを取得する.
      */
@@ -45,39 +83,24 @@ public class SoundPlayer implements MediaPlayer {
     }
 
     /**
-     * メディアを再生する.
-     * 途中で停止されている場合はその停止位置から再開する.
+     * 再生するメディアファイルを指定する.
      */
-    public void play() {
-        if(player == null || player.getClass() != PlayerUtils.getSuitablePlayerClass(media)) {
-            if(player != null) player.stop();
-            player = PlayerUtils.createSuitablePlayer(media);
-        }
-        if(player != null) {
-            if(player.getMedia() != media)
-                player.setMedia(media);
-            player.setRepeat(isRepeat);
-            player.play();
-        }
-    }
-
-    public void restart() {
-        if(player != null) {
-            player.restart();
-        } else {
-            play();
-        }
+    public void setMedia(File file) {
+        this.media = MediaUtils.createSuitableMedia(file);
     }
 
     /**
-     * メディアの再生を停止する.
-     * 停止後にplayを呼び出した場合、停止した時点から再開できる.
-     *
-     * ただし、AU形式の再生の場合のみ停止時は開始時点まで巻き戻される.
+     * 再生するメディアリソースのパスを指定する.
      */
-    public void stop() {
-        if(player != null)
-            player.stop();
+    public void setMedia(String resourcePath) {
+        this.media = MediaUtils.createSuitableMedia(resourcePath);
+    }
+
+    /**
+     * 再生するメディアを指定する.
+     */
+    public void setMedia(Media media) {
+        this.media = media;
     }
 
     public boolean isPlaying() {

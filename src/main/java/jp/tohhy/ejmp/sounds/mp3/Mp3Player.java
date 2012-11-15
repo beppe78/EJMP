@@ -88,8 +88,7 @@ public class Mp3Player implements MediaPlayer {
                 if(player == null) {
                     try {
                         int full = playing.getStream().available();
-                        //やや多めに巻き戻したほうが音がつながる
-                        int skiplength = full - stoppedLastByte - 10000;
+                        int skiplength = full - stoppedLastByte;
                         while(skiplength > 0 && skiplength < full)
                             skiplength -= playing.getStream().skip(skiplength);
                         player = new Player(playing.getStream());
@@ -140,5 +139,9 @@ public class Mp3Player implements MediaPlayer {
 
     public void setRepeat(boolean isRepeat) {
         this.isRepeat = isRepeat;
+    }
+
+    public void rewind() {
+        stoppedLastByte = Integer.MAX_VALUE;
     }
 }

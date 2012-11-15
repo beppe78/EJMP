@@ -173,4 +173,9 @@ public class MIDIPlayer implements MediaPlayer {
     public void run() {
         // TODO 自動生成されたメソッド・スタブ
     }
+
+    public void rewind() {
+        // TODO 自動生成されたメソッド・スタブ
+        
+    }
 }

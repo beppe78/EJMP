@@ -21,6 +21,7 @@ public class WavePlayer implements MediaPlayer {
     private boolean isPreLoad = false;
     private boolean isRepeat = false;
     private boolean isPlaying = false;
+    
     private Playable threadPlay = new Playable() {
         public void play(PlayThread thread) {
             isPlaying = true;
@@ -119,10 +120,14 @@ public class WavePlayer implements MediaPlayer {
 
     public void restart() {
         stop();
-        playing.reload();
-        thread.setEnd(true);
+        rewind();
         if(!isPlaying)
             play();
+    }
+
+    public void rewind() {
+        playing.reload();
+        thread.setEnd(true);
     }
 
     public void stop() {
