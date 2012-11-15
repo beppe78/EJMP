@@ -54,12 +54,12 @@ public interface MediaPlayer {
      * リピートが設定されているかどうかを返す.
      * @return
      */
-    public boolean isRepeat();
+    public boolean isLoop();
 
     /**
      * リピートの有無を設定する.
      * @param isRepeat
      */
-    public void setRepeat(boolean isRepeat);
+    public void setLoop(boolean isRepeat);
 
 }

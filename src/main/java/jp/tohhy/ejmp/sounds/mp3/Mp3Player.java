@@ -123,11 +123,11 @@ public class Mp3Player implements MediaPlayer {
         return isPlaying;
     }
 
-    public boolean isRepeat() {
+    public boolean isLoop() {
         return this.isRepeat;
     }
 
-    public void setRepeat(boolean isRepeat) {
+    public void setLoop(boolean isRepeat) {
         this.isRepeat = isRepeat;
     }
 

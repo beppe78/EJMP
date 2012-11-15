@@ -1,12 +1,13 @@
 package jp.tohhy.ejmp.sounds.au;
 
 import jp.tohhy.ejmp.interfaces.AbstractMediaPlayer;
+import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
 
 public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
 
     public void play() {
-        if(isRepeat()) {
+        if(isLoop()) {
             getAUMedia().getClip().loop();
         } else {
             getAUMedia().getClip().play();
@@ -41,6 +42,16 @@ public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
     public void rewind() {
         // TODO 自動生成されたメソッド・スタブ
         
+    }
+
+    public void setMedia(Media media) {
+        // TODO 自動生成されたメソッド・スタブ
+        
+    }
+
+    public Media getMedia() {
+        // TODO 自動生成されたメソッド・スタブ
+        return null;
     }
 
 }

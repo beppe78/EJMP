@@ -141,11 +141,11 @@ public class MIDIPlayer implements MediaPlayer {
         return this.playing.getSequencer().getTickPosition();
     }
 
-    public void setRepeat(boolean isRepeat) {
+    public void setLoop(boolean isRepeat) {
         this.isRepeat = isRepeat;
     }
 
-    public boolean isRepeat() {
+    public boolean isLoop() {
         return isRepeat;
     }
 

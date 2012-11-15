@@ -7,6 +7,7 @@ public interface Media {
     public enum MediaType {
         WAVE, AIFF, AU,
         MP3, AAC, OGG, WMA,
+        TAC, FLAC, TTA, APE, WAVPACK,
         MIDI,
         AVI, FLV
     }

@@ -53,12 +53,12 @@ public class OggPlayer implements MediaPlayer {
         return false;
     }
 
-    public boolean isRepeat() {
+    public boolean isLoop() {
         // TODO 自動生成されたメソッド・スタブ
         return false;
     }
 
-    public void setRepeat(boolean isRepeat) {
+    public void setLoop(boolean isRepeat) {
         // TODO 自動生成されたメソッド・スタブ
         
     }

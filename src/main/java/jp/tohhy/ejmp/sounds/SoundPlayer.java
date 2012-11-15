@@ -30,33 +30,42 @@ public class SoundPlayer extends AbstractMediaPlayer {
     public void setMedia(URL url) {
         setMedia(MediaUtils.createSuitableMedia(url));
     }
-
-    public void setRepeat(boolean isRepeat) {
-        super.setRepeat(isRepeat);
+    
+    public void setMedia(Media media) {
+        preparePlayer(media);
+    }
+    
+    public Media getMedia() {
         if(player != null)
-            player.setRepeat(isRepeat);
+            return player.getMedia();
+        return null;
+    }
+
+    public void setLoop(boolean isRepeat) {
+        super.setLoop(isRepeat);
+        if(player != null)
+            player.setLoop(isRepeat);
+    }
+    
+    private void preparePlayer(Media media) {
+        if(player == null || player.getClass() != PlayerUtils.getSuitablePlayerClass(media)) {
+            if(player != null) player.stop();
+            player = PlayerUtils.createSuitablePlayer(media);
+        }
+        if(player != null) {
+            if(player.getMedia() != media)
+                player.setMedia(media);
+            player.setLoop(isLoop());
+        }
     }
 
     /**
-     * 新しく再生スレッドを生成し、メディアを再生する.
+     * メディアを再生する.
      * 途中で停止されている場合はその停止位置から再開する.
      */
     public void play() {
-        new Thread(new Runnable() {
-            public void run() {
-                final Media media = getMedia();
-                if(player == null || player.getClass() != PlayerUtils.getSuitablePlayerClass(media)) {
-                    if(player != null) player.stop();
-                    player = PlayerUtils.createSuitablePlayer(media);
-                }
-                if(player != null) {
-                    if(player.getMedia() != media)
-                        player.setMedia(media);
-                    player.setRepeat(isRepeat());
-                    player.play();
-                }
-            }
-        }).start();
+        preparePlayer(getMedia());
+        player.play();
     }
 
     /**
@@ -64,22 +73,13 @@ public class SoundPlayer extends AbstractMediaPlayer {
      * 停止後にplayを呼び出した場合、停止した時点から再開できる.
      */
     public void stop() {
-        new Thread(new Runnable() {
-            public void run() {
-                if(player != null)
-                    player.stop();
-            }
-        }).start();
-        
+        if(player != null)
+            player.stop();
     }
 
     public void rewind() {
-        new Thread(new Runnable() {
-            public void run() {
-                if(player != null)
-                    player.rewind();
-            }
-        }).start();
+        if(player != null)
+            player.rewind();
     }
 
     public boolean isPlaying() {

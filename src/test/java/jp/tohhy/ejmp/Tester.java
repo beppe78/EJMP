@@ -1,15 +1,7 @@
 package jp.tohhy.ejmp;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Timer;
 
-import javax.media.CannotRealizeException;
-import javax.media.Manager;
-import javax.media.NoPlayerException;
-import javax.media.Player;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,27 +14,11 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-//        final WavePlayer player = new WavePlayer();
-//        player.setMedia("resources/test.wav");
-        player.setMedia("resources/test.mp3");
-        player.setRepeat(false);
+        player.setMedia("resources/test.wav");
+//        player.setMedia("resources/test.mp3");
+        player.setLoop(false);
         
-//        File file = new File("src/test/java/resources/test.wav");
-//
-//        try {
-//            Player jmf = Manager.createRealizedPlayer(file.toURI().toURL());
-//            jmf.start();
-//        } catch (NoPlayerException e1) {
-//            e1.printStackTrace();
-//        } catch (CannotRealizeException e1) {
-//            e1.printStackTrace();
-//        } catch (MalformedURLException e1) {
-//            e1.printStackTrace();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
         
-        Timer timer = new Timer();
 
         JFrame frame = new JFrame();
         Box box = new Box(BoxLayout.X_AXIS);

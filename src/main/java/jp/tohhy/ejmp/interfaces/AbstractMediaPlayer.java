@@ -2,8 +2,7 @@ package jp.tohhy.ejmp.interfaces;
 
 
 public abstract class AbstractMediaPlayer implements MediaPlayer {
-    private Media media;
-    private boolean isRepeat = false;
+    private boolean isLoop = false;
 
     public void restart() {
         stop();
@@ -11,20 +10,12 @@ public abstract class AbstractMediaPlayer implements MediaPlayer {
         play();
     }
 
-    public void setMedia(Media media) {
-        this.media = media;
-    }
-    
-    public Media getMedia() {
-        return media;
+    public boolean isLoop() {
+        return isLoop;
     }
 
-    public boolean isRepeat() {
-        return isRepeat;
-    }
-
-    public void setRepeat(boolean isRepeat) {
-        this.isRepeat = isRepeat;
+    public void setLoop(boolean isLoop) {
+        this.isLoop = isLoop;
     }
 
 }
