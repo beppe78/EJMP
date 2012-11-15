@@ -1,6 +1,5 @@
 package jp.tohhy.ejmp.sounds.mp3;
 
-import java.io.File;
 import java.io.IOException;
 
 import javazoom.jl.decoder.JavaLayerException;
@@ -59,15 +58,6 @@ public class Mp3Player implements MediaPlayer {
         }
     };
 
-    public void setMedia(File file) {
-        this.playing = new Mp3Sound(file);
-        stop();
-    }
-
-    public void setMedia(String resourcePath) {
-        this.playing = new Mp3Sound(resourcePath);
-        stop();
-    }
 
     public void setMedia(Media media) {
         if(media instanceof Mp3Sound) {

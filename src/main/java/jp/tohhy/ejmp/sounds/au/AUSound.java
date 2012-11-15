@@ -3,53 +3,31 @@ package jp.tohhy.ejmp.sounds.au;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.File;
-import java.net.MalformedURLException;
+import java.net.URL;
 
-import jp.tohhy.ejmp.interfaces.Media;
+import jp.tohhy.ejmp.interfaces.AbstractMedia;
 
-public class AUSound extends Media {
+public class AUSound extends AbstractMedia {
     private AudioClip clip;
 
     public AUSound(File file) {
         super(file);
-        loadAudioClip(file);
+        loadAudioClip(getUrl());
     }
 
     public AUSound(String resourcePath) {
         super(resourcePath);
-        loadAudioClip(resourcePath);
+        loadAudioClip(getUrl());
     }
 
-    @Override
     public void reload() {
         setClip(null);
-        if(getFile() != null && getFile().exists()) {
-            loadAudioClip(getFile());
-        } else if(getResourcePath() != null) {
-            loadAudioClip(getResourcePath());
-        }
+        loadAudioClip(getUrl());
     }
 
-    @Override
-    public MediaType getMediaType() {
-        return MediaType.AU;
-    }
-
-    @Override
-    public void dispose() throws Exception {
-        clip = null;
-    }
-
-    private void loadAudioClip(File file) {
-        try {
-            setClip(Applet.newAudioClip(file.toURI().toURL()));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadAudioClip(String resourcePath) {
-        setClip(Applet.newAudioClip(getClass().getClassLoader().getResource(resourcePath)));
+    
+    private void loadAudioClip(URL url) {
+        setClip(Applet.newAudioClip(url));
     }
 
     public void setClip(AudioClip clip) {
@@ -58,6 +36,14 @@ public class AUSound extends Media {
 
     public AudioClip getClip() {
         return clip;
+    }
+
+    public MediaType getMediaType() {
+        return MediaType.AU;
+    }
+
+    public void dispose() throws Exception {
+        clip = null;
     }
 
 }

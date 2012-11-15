@@ -2,6 +2,7 @@ package jp.tohhy.ejmp.sounds.ogg;
 
 import java.io.File;
 
+import jp.tohhy.ejmp.interfaces.AbstractMedia;
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
 
@@ -17,12 +18,12 @@ public class OggPlayer implements MediaPlayer {
         
     }
 
-    public void setMedia(Media media) {
+    public void setMedia(AbstractMedia media) {
         // TODO 自動生成されたメソッド・スタブ
         
     }
 
-    public Media getMedia() {
+    public AbstractMedia getMedia() {
         // TODO 自動生成されたメソッド・スタブ
         return null;
     }
@@ -58,6 +59,11 @@ public class OggPlayer implements MediaPlayer {
     }
 
     public void setRepeat(boolean isRepeat) {
+        // TODO 自動生成されたメソッド・スタブ
+        
+    }
+
+    public void setMedia(Media media) {
         // TODO 自動生成されたメソッド・スタブ
         
     }

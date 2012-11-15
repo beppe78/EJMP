@@ -1,7 +1,9 @@
 package jp.tohhy.ejmp.sounds;
 
 import java.io.File;
+import java.net.URL;
 
+import jp.tohhy.ejmp.interfaces.AbstractMediaPlayer;
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
 import jp.tohhy.ejmp.utils.MediaUtils;
@@ -12,12 +14,28 @@ import jp.tohhy.ejmp.utils.PlayerUtils;
  * setMediaでファイルやリソースを与えてplay()を呼び出すと、
  * メディアの拡張子から判断してその形式に対し適切なプレイヤーを内部で生成して実行する.
  */
-public class SoundPlayer implements MediaPlayer {
-    private Media media;
+public class SoundPlayer extends AbstractMediaPlayer {
     private MediaPlayer player;
-    private boolean isRepeat = false;
 
     public SoundPlayer() {}
+
+    public void setMedia(File file) {
+        setMedia(MediaUtils.createSuitableMedia(file));
+    }
+
+    public void setMedia(String resourcePath) {
+        setMedia(MediaUtils.createSuitableMedia(resourcePath));
+    }
+
+    public void setMedia(URL url) {
+        setMedia(MediaUtils.createSuitableMedia(url));
+    }
+
+    public void setRepeat(boolean isRepeat) {
+        super.setRepeat(isRepeat);
+        if(player != null)
+            player.setRepeat(isRepeat);
+    }
 
     /**
      * 新しく再生スレッドを生成し、メディアを再生する.
@@ -26,6 +44,7 @@ public class SoundPlayer implements MediaPlayer {
     public void play() {
         new Thread(new Runnable() {
             public void run() {
+                final Media media = getMedia();
                 if(player == null || player.getClass() != PlayerUtils.getSuitablePlayerClass(media)) {
                     if(player != null) player.stop();
                     player = PlayerUtils.createSuitablePlayer(media);
@@ -33,20 +52,8 @@ public class SoundPlayer implements MediaPlayer {
                 if(player != null) {
                     if(player.getMedia() != media)
                         player.setMedia(media);
-                    player.setRepeat(isRepeat);
+                    player.setRepeat(isRepeat());
                     player.play();
-                }
-            }
-        }).start();
-    }
-
-    public void restart() {
-        new Thread(new Runnable() {
-            public void run() {
-                if(player != null) {
-                    player.restart();
-                } else {
-                    play();
                 }
             }
         }).start();
@@ -75,50 +82,10 @@ public class SoundPlayer implements MediaPlayer {
         }).start();
     }
 
-    /**
-     * このプレイヤーにセットされているメディアを取得する.
-     */
-    public Media getMedia() {
-        return media;
-    }
-
-    /**
-     * 再生するメディアファイルを指定する.
-     */
-    public void setMedia(File file) {
-        this.media = MediaUtils.createSuitableMedia(file);
-    }
-
-    /**
-     * 再生するメディアリソースのパスを指定する.
-     */
-    public void setMedia(String resourcePath) {
-        this.media = MediaUtils.createSuitableMedia(resourcePath);
-    }
-
-    /**
-     * 再生するメディアを指定する.
-     */
-    public void setMedia(Media media) {
-        this.media = media;
-    }
-
     public boolean isPlaying() {
         if(player != null)
             return player.isPlaying();
         return false;
-    }
-
-    public boolean isRepeat() {
-        if(player != null)
-            return isRepeat;
-        return false;
-    }
-
-    public void setRepeat(boolean isRepeat) {
-        this.isRepeat = isRepeat;
-        if(player != null)
-            player.setRepeat(isRepeat);
     }
 
 }

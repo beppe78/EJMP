@@ -1,6 +1,5 @@
 package jp.tohhy.ejmp.interfaces;
 
-import java.io.File;
 
 /**
  * 再生や停止が可能な何らかのメディアのプレイヤーが実装するインタフェース.
@@ -8,17 +7,6 @@ import java.io.File;
  * @author tohhy
  */
 public interface MediaPlayer {
-    /**
-     * 再生するメディアをセットする.
-     * @param file 再生するメディアが保存されたファイル
-     */
-    public void setMedia(File file);
-
-    /**
-     * 再生するメディアをセットする.
-     * @param resourcePath 再生するメディアが保存されたリソースへのパス
-     */
-    public void setMedia(String resourcePath);
 
     /**
      * 再生するメディアをセットする.

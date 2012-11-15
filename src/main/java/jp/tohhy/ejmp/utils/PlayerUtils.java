@@ -8,6 +8,8 @@ import jp.tohhy.ejmp.sounds.midi.MIDIPlayer;
 import jp.tohhy.ejmp.sounds.midi.MIDISound;
 import jp.tohhy.ejmp.sounds.mp3.Mp3Player;
 import jp.tohhy.ejmp.sounds.mp3.Mp3Sound;
+import jp.tohhy.ejmp.sounds.ogg.OggPlayer;
+import jp.tohhy.ejmp.sounds.ogg.OggSound;
 import jp.tohhy.ejmp.sounds.wave.WavePlayer;
 import jp.tohhy.ejmp.sounds.wave.WaveSound;
 
@@ -36,11 +38,10 @@ public class PlayerUtils {
         return null;
     }
 
-
     /**
      * メディアから判断して適切なプレイヤークラスを返す.
      * @param ext 拡張子（.を含まない）
-     * @return 拡張子に対応したメディアクラス
+     * @return 拡張子に対応したメディアプレイヤークラス
      */
     public static Class<? extends MediaPlayer> getSuitablePlayerClass(Media media) {
         if(media instanceof MIDISound) {
@@ -51,6 +52,8 @@ public class PlayerUtils {
             return WavePlayer.class;
         } else if(media instanceof AUSound) {
             return AUPlayer.class;
+        } else if(media instanceof OggSound) {
+            return OggPlayer.class;
         }
         return null;
     }

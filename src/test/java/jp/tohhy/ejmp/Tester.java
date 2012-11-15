@@ -16,35 +16,31 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import jp.tohhy.ejmp.sounds.wave.WavePlayer;
+import jp.tohhy.ejmp.sounds.SoundPlayer;
 
 public class Tester {
 
     public Tester() {
-//        final SoundPlayer player = new SoundPlayer();
-        final WavePlayer player = new WavePlayer();
-        player.setMedia("resources/test.wav");
-//        player.setMedia("resources/test.mp3");
+        final SoundPlayer player = new SoundPlayer();
+//        final WavePlayer player = new WavePlayer();
+//        player.setMedia("resources/test.wav");
+        player.setMedia("resources/test.mp3");
         player.setRepeat(false);
         
-        File file = new File("src/test/java/resources/test.wav");
-
-        try {
-            Player jmf = Manager.createRealizedPlayer(file.toURI().toURL());
-            jmf.start();
-        } catch (NoPlayerException e1) {
-            // TODO 自動生成された catch ブロック
-            e1.printStackTrace();
-        } catch (CannotRealizeException e1) {
-            // TODO 自動生成された catch ブロック
-            e1.printStackTrace();
-        } catch (MalformedURLException e1) {
-            // TODO 自動生成された catch ブロック
-            e1.printStackTrace();
-        } catch (IOException e1) {
-            // TODO 自動生成された catch ブロック
-            e1.printStackTrace();
-        }
+//        File file = new File("src/test/java/resources/test.wav");
+//
+//        try {
+//            Player jmf = Manager.createRealizedPlayer(file.toURI().toURL());
+//            jmf.start();
+//        } catch (NoPlayerException e1) {
+//            e1.printStackTrace();
+//        } catch (CannotRealizeException e1) {
+//            e1.printStackTrace();
+//        } catch (MalformedURLException e1) {
+//            e1.printStackTrace();
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
         
         Timer timer = new Timer();
 

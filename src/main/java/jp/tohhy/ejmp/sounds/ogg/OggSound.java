@@ -2,9 +2,9 @@ package jp.tohhy.ejmp.sounds.ogg;
 
 import java.io.File;
 
-import jp.tohhy.ejmp.interfaces.Media;
+import jp.tohhy.ejmp.interfaces.AbstractMedia;
 
-public class OggSound extends Media {
+public class OggSound extends AbstractMedia {
 
     public OggSound(File file) {
         super(file);
@@ -14,17 +14,17 @@ public class OggSound extends Media {
         super(resourcePath);
     }
 
-    @Override
+
     public void reload() {
         
     }
 
-    @Override
+
     public MediaType getMediaType() {
         return null;
     }
 
-    @Override
+
     public void dispose() throws Exception {
         
     }

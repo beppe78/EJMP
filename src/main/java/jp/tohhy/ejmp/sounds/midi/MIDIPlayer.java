@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Synthesizer;
 
+import jp.tohhy.ejmp.interfaces.AbstractMedia;
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
 
@@ -68,12 +69,12 @@ public class MIDIPlayer implements MediaPlayer {
         this.playing = new MIDISound(resourcePath);
     }
 
-    public void setMedia(Media media) {
+    public void setMedia(AbstractMedia media) {
         if(media instanceof MIDISound)
             this.playing = (MIDISound) media;
     }
 
-    public Media getMedia() {
+    public AbstractMedia getMedia() {
         return playing;
     }
 
@@ -175,6 +176,11 @@ public class MIDIPlayer implements MediaPlayer {
     }
 
     public void rewind() {
+        // TODO 自動生成されたメソッド・スタブ
+        
+    }
+
+    public void setMedia(Media media) {
         // TODO 自動生成されたメソッド・スタブ
         
     }

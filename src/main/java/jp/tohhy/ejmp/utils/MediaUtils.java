@@ -3,21 +3,27 @@ package jp.tohhy.ejmp.utils;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
-import jp.tohhy.ejmp.interfaces.Media;
+import jp.tohhy.ejmp.interfaces.AbstractMedia;
 import jp.tohhy.ejmp.sounds.au.AUSound;
 import jp.tohhy.ejmp.sounds.midi.MIDISound;
 import jp.tohhy.ejmp.sounds.mp3.Mp3Sound;
+import jp.tohhy.ejmp.sounds.ogg.OggSound;
 import jp.tohhy.ejmp.sounds.wave.WaveSound;
 
 public class MediaUtils {
 
-    public static Media createSuitableMedia(String resourcePath) {
+    public static AbstractMedia createSuitableMedia(String resourcePath) {
         return createSuitableMedia(FileUtils.getExtension(resourcePath), resourcePath);
     }
 
-    public static Media createSuitableMedia(File file) {
+    public static AbstractMedia createSuitableMedia(File file) {
         return createSuitableMedia(FileUtils.getExtension(file.getName()), file);
+    }
+    
+    public static AbstractMedia createSuitableMedia(URL url) {
+        return createSuitableMedia(FileUtils.getExtension(url.getFile()), url);
     }
 
     /**
@@ -25,7 +31,7 @@ public class MediaUtils {
      * @param ext 拡張子（.を含まない）
      * @return 拡張子に対応したメディアクラス
      */
-    private static Class<? extends Media> getSuitableMediaClassForExtension(String extension) {
+    private static Class<? extends AbstractMedia> getSuitableMediaClassForExtension(String extension) {
         final String ext = extension.toLowerCase();
         if(ext.equals("aif") || ext.equals("aiff")) {
             //未対応
@@ -38,7 +44,7 @@ public class MediaUtils {
         } else if(ext.equals("au")) {
             return AUSound.class;
         } else if(ext.equals("ogg") || ext.equals("ogx") || ext.equals("oga")) {
-            //未対応
+            return OggSound.class;
         } else if(ext.equals("aac") || ext.equals("mp4") || ext.equals("m4a")) {
             //未対応
         } else if(ext.equals("mid") || ext.equals("midi")) {
@@ -50,15 +56,15 @@ public class MediaUtils {
     /**
      * 拡張子とメディアに与える引数から適切なメディアを生成して返す.
      * @param ext ext 拡張子（.を含まない）
-     * @param arg メディアに与える引数
+     * @param arg メディアのコンストラクタに与える引数
      * @return 適切なメディア
      */
-    private static Media createSuitableMedia(String ext, Object arg) {
-        final Class<? extends Media> suitableMedia = getSuitableMediaClassForExtension(ext);
+    private static AbstractMedia createSuitableMedia(String ext, Object arg) {
+        final Class<? extends AbstractMedia> suitableMedia = getSuitableMediaClassForExtension(ext);
         if(suitableMedia != null) {
             try {
                 final Object[] args = {arg};
-                final Constructor<? extends Media> constructor = suitableMedia.getConstructor(arg.getClass());
+                final Constructor<? extends AbstractMedia> constructor = suitableMedia.getConstructor(arg.getClass());
                 return constructor.newInstance(args);
             } catch (SecurityException e) {
                 e.printStackTrace();

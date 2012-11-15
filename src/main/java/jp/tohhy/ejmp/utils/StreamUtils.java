@@ -1,30 +1,19 @@
 package jp.tohhy.ejmp.utils;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 
 public class StreamUtils {
-
+    
     /**
-     * ファイルを読み出すBufferedInputStreamを適切に生成して返す.
-     * @param file 読み出すファイル
-     * @return リソースを読み出すBufferedInputStream
-     * @throws FileNotFoundException
-     */
-    public static BufferedInputStream getFileAsStream(File file) throws FileNotFoundException {
-        return new BufferedInputStream(new FileInputStream(file));
-    }
-
-    /**
-     * リソースを読み出すBufferedInputStreamを適切に生成して返す.
+     * URLを読み出すBufferedInputStreamを適切に生成して返す.
      * @param resourcePath 読み出すリソースのパス
      * @return リソースを読み出すBufferedInputStream
+     * @throws IOException 
      */
-    public static BufferedInputStream getResourceAsStream(String resourcePath) {
-        return new BufferedInputStream(
-                Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath));
+    public static BufferedInputStream getURLAsStream(URL url) throws IOException {
+        return new BufferedInputStream(url.openStream());
     }
 
 }

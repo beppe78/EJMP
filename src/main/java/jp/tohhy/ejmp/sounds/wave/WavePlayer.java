@@ -10,6 +10,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+import jp.tohhy.ejmp.interfaces.AbstractMedia;
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
 import jp.tohhy.ejmp.utils.PlayThread;
@@ -109,12 +110,12 @@ public class WavePlayer implements MediaPlayer {
         playing = new WaveSound(resourcePath);
     }
 
-    public void setMedia(Media media) {
+    public void setMedia(AbstractMedia media) {
         if(media instanceof WaveSound)
             playing = (WaveSound)media;
     }
 
-    public Media getMedia() {
+    public AbstractMedia getMedia() {
         return playing;
     }
 
@@ -158,5 +159,10 @@ public class WavePlayer implements MediaPlayer {
 
     public boolean isPreLoad() {
         return isPreLoad;
+    }
+
+    public void setMedia(Media media) {
+        // TODO 自動生成されたメソッド・スタブ
+        
     }
 }
