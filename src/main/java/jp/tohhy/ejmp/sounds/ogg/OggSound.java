@@ -55,11 +55,16 @@ public class OggSound extends SpiSound {
     
     public AudioFormat getFormat() {
         final AudioFormat baseFormat = getFileFormat().getFormat();
-        return new AudioFormat(
-                baseFormat.getSampleRate(),
-                baseFormat.getSampleSizeInBits(),
-                baseFormat.getChannels(),
-                true,
+        int nSampleSizeInBits = baseFormat.getSampleSizeInBits();
+        if (nSampleSizeInBits <= 0) nSampleSizeInBits = 16;
+        if ((baseFormat.getEncoding() == AudioFormat.Encoding.ULAW) || 
+                (baseFormat.getEncoding() == AudioFormat.Encoding.ALAW)) nSampleSizeInBits = 16;
+        if (nSampleSizeInBits != 8) nSampleSizeInBits = 16;
+        return new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
+                baseFormat.getSampleRate(), nSampleSizeInBits, 
+                baseFormat.getChannels(), 
+                baseFormat.getChannels() * (nSampleSizeInBits / 8), 
+                baseFormat.getSampleRate(), 
                 false);
     }
     

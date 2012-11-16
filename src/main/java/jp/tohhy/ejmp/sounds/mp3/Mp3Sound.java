@@ -56,13 +56,14 @@ public class Mp3Sound extends SpiSound {
     
     public AudioFormat getFormat() {
         final AudioFormat baseFormat = getFileFormat().getFormat();
-        return new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
+        AudioFormat f = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
                 baseFormat.getSampleRate(),
                 16,
                 baseFormat.getChannels(),
                 baseFormat.getChannels() * 2,
                 baseFormat.getSampleRate(),
                 false);
+        return f;
     }
     
     public AudioInputStream getDecodedStream() {

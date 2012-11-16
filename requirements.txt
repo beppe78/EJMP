@@ -1,0 +1,16 @@
+
+ - wave, au
+none
+
+ - mp3
+ jlayer-1.0.1-1.jar
+ mp3spi-1.9.5-1.jar
+ 
+ - ogg
+ vorbisspi1.0.3.jar
+ jorbis-0.0.15.jar
+ tritonus_jorbis.jar
+ jogg-0.0.7.jar
+
+
+
