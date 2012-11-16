@@ -1,71 +1,19 @@
 package jp.tohhy.ejmp.sounds.ogg;
 
-import java.io.File;
-
-import jp.tohhy.ejmp.interfaces.AbstractMedia;
 import jp.tohhy.ejmp.interfaces.Media;
-import jp.tohhy.ejmp.interfaces.MediaPlayer;
+import jp.tohhy.ejmp.sounds.spi.SpiPlayer;
+import jp.tohhy.ejmp.sounds.spi.SpiSound;
 
-public class OggPlayer implements MediaPlayer {
-
-    public void setMedia(File file) {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
-
-    public void setMedia(String resourcePath) {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
-
-    public void setMedia(AbstractMedia media) {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
-
-    public AbstractMedia getMedia() {
-        // TODO 自動生成されたメソッド・スタブ
-        return null;
-    }
-
-    public void play() {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
-
-    public void restart() {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
-
-    public void rewind() {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
-
-    public void stop() {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
-
-    public boolean isPlaying() {
-        // TODO 自動生成されたメソッド・スタブ
-        return false;
-    }
-
-    public boolean isLoop() {
-        // TODO 自動生成されたメソッド・スタブ
-        return false;
-    }
-
-    public void setLoop(boolean isRepeat) {
-        // TODO 自動生成されたメソッド・スタブ
-        
-    }
+public class OggPlayer extends SpiPlayer {
+    private OggSound media;
 
     public void setMedia(Media media) {
-        // TODO 自動生成されたメソッド・スタブ
-        
+        if(media instanceof OggSound)
+            this.media = (OggSound)media;
     }
 
+    @Override
+    public SpiSound getSpiSound() {
+        return media;
+    }
 }

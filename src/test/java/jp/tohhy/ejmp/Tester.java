@@ -6,6 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 
 import jp.tohhy.ejmp.sounds.SoundPlayer;
@@ -14,12 +15,7 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-//        final SpiWavePlayer player = new SpiWavePlayer();
-//        player.setMedia(new SpiWaveSound("resources/test.wav"));
         player.setMedia("resources/test.wav");
-        player.setLoop(true);
-        
-        
 
         JFrame frame = new JFrame();
         Box box = new Box(BoxLayout.X_AXIS);
@@ -36,6 +32,11 @@ public class Tester {
         box.add(new JButton(new AbstractAction("restart") {
             public void actionPerformed(ActionEvent e) {
                 player.restart();
+            }
+        }));
+        box.add(new JCheckBox(new AbstractAction("isLoop") {
+            public void actionPerformed(ActionEvent e) {
+                player.setLoop(((JCheckBox)e.getSource()).isSelected());
             }
         }));
         frame.setBounds(100,100,300,200);
