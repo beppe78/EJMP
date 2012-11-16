@@ -1,69 +1,73 @@
 package jp.tohhy.ejmp.sounds.wave;
 
-import javax.media.ControllerEvent;
-import javax.media.ControllerListener;
-import javax.media.EndOfMediaEvent;
-import javax.media.Manager;
-import javax.media.Player;
-import javax.media.Time;
+import java.io.IOException;
 
-import jp.tohhy.ejmp.interfaces.AbstractMediaPlayer;
+import javax.sound.sampled.SourceDataLine;
+
 import jp.tohhy.ejmp.interfaces.Media;
+import jp.tohhy.ejmp.sounds.spi.SpiPlayer;
+import jp.tohhy.ejmp.utils.PlayThread;
+import jp.tohhy.ejmp.utils.PlayThread.Playable;
 
-public class WavePlayer extends AbstractMediaPlayer implements ControllerListener {
-    private Player player;
-    private WaveSound playing;
+public class WavePlayer extends SpiPlayer {
+    private WaveSound media;
     private boolean isPlaying = false;
-
-    public void play() {
-        //既に再生中かメディアが存在しなければ何もしない
-        if(isPlaying || playing == null)
-            return;
-        //そうでなければ再生する
-        isPlaying = true;
-        //プレイヤーが存在しなければ生成
-        if(player == null) {
-            try {
-                player = Manager.createRealizedPlayer(playing.getDataSource());
-                player.addControllerListener(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-        //再生
-        player.start();
-    }
-
-    public void rewind() {
-        player.setMediaTime(new Time(0));
-    }
-
-    public void stop() {
-        if(player != null)
-            player.stop();
-        isPlaying = false;
-    }
-    
-    public boolean isPlaying() {
-        return isPlaying;
-    }
 
     public void setMedia(Media media) {
         if(media instanceof WaveSound)
-            this.playing = (WaveSound) media;
+            this.media = (WaveSound)media;
     }
 
     public Media getMedia() {
-        return playing;
+        return media;
     }
 
-    public void controllerUpdate(ControllerEvent e) {
-        if(e instanceof EndOfMediaEvent) {
-            System.out.println("end");
-            if(isLoop())
-                restart();
+    public void play() {
+        if(media != null && !isPlaying()) {
+            createThread(new Playable() {
+                public void play(PlayThread thread) {
+                    final SourceDataLine line = getLine(media);
+                    line.start();
+                    isPlaying = true;
+                    try {
+                        long readBytes = 0;
+                        while (readBytes < getTotalBytes() && isPlaying()) {
+                            if(thread.isEnd()) break;
+                            int read = media.getStream().read(buffer, 0, buffer.length);
+                            if (read == -1) break;
+                            readBytes += read;
+                            line.write(buffer, 0, read);
+                        }
+                    } catch (IOException e) {
+                          e.printStackTrace();
+                    }
+                    isPlaying = false;
+                    if(isLoop()) {
+                        restart();
+                    }
+                }
+            });
+            startThread();
         }
     }
 
+    public void rewind() {
+        if(isPlaying) {
+            stop();
+            media.reload();
+            play();
+        } else {
+            stop();
+            media.reload();
+        }
+    }
+
+    public void stop() {
+        disposeThread();
+        isPlaying = false;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
 }

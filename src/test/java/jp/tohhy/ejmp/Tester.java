@@ -14,9 +14,10 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
+//        final SpiWavePlayer player = new SpiWavePlayer();
+//        player.setMedia(new SpiWaveSound("resources/test.wav"));
         player.setMedia("resources/test.wav");
-//        player.setMedia("resources/test.mp3");
-        player.setLoop(false);
+        player.setLoop(true);
         
         
 

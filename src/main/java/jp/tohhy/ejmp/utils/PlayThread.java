@@ -24,7 +24,7 @@ public class PlayThread extends Thread {
     public interface Playable {
         /**
          * メディアの再生処理を記述する.runから呼び出される.
-         * PlayThreadのisEndがtrueになったらループを抜けるように実装する.
+         * PlayThreadのisEndがtrueになったら即座にループを抜けるように実装する.
          */
         public void play(PlayThread thread);
     }
