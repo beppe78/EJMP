@@ -1,5 +1,7 @@
 package jp.tohhy.ejmp.sounds.au;
 
+import java.applet.AudioClip;
+
 import jp.tohhy.ejmp.interfaces.AbstractMediaPlayer;
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
@@ -9,9 +11,11 @@ public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
 
     public void play() {
         if(isLoop()) {
-            getAUMedia().getClip().loop();
+            AudioClip clip = getAUMedia().getClip();
+            clip.loop();
         } else {
-            getAUMedia().getClip().play();
+            AudioClip clip = getAUMedia().getClip();
+            clip.play();
         }
     }
 
@@ -54,5 +58,11 @@ public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
     public Media getMedia() {
         return media;
     }
+
+    public double getVolume() {
+        return 1.0;
+    }
+
+    public void setVolume(double volume) {}
 
 }

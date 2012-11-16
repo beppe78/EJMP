@@ -88,4 +88,11 @@ public class SoundPlayer extends AbstractMediaPlayer {
         return false;
     }
 
+    public double getVolume() {
+        return player.getVolume();
+    }
+
+    public void setVolume(double volume) {
+        player.setVolume(volume);
+    }
 }

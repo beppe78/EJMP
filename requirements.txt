@@ -10,6 +10,7 @@ none
  vorbisspi1.0.3.jar
  jorbis-0.0.15.jar
  tritonus_jorbis.jar
+ tritonus_share.jar
  jogg-0.0.7.jar
 
 

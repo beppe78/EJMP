@@ -67,8 +67,9 @@ public class Mp3Sound extends SpiSound {
     }
     
     public AudioInputStream getDecodedStream() {
-        if(decodedStream == null)
+        if(decodedStream == null) {
             decodedStream = AudioSystem.getAudioInputStream(getFormat(), getStream());
+        }
         return decodedStream;
     }
 }

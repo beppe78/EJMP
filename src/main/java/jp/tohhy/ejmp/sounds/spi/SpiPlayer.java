@@ -6,6 +6,7 @@ import java.lang.Thread.State;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
@@ -17,7 +18,7 @@ import jp.tohhy.ejmp.utils.PlayThread.Playable;
 public abstract class SpiPlayer extends AbstractMediaPlayer {
     private SourceDataLine line;
     private boolean isPlaying = false;
-
+    private double volume = 1.0;
     private PlayThread playThread;
     protected final byte[] buffer = new byte[20480];
     
@@ -56,12 +57,13 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
     }
 
     public void startThread() {
-        if(playThread != null)
+        if(playThread != null) {
             playThread.start();
+        }
     }
 
     public void createThread(Playable p) {
-        playThread = new PlayThread(p);
+        playThread = new PlayThread(p);        
     }
 
     public void disposeThread() {
@@ -114,11 +116,25 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
                 final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
                 line = (SourceDataLine) AudioSystem.getLine(info);
                 line.open(format, buffer.length);
+                setVolume(volume);
             }
         } catch (LineUnavailableException e) {
             e.printStackTrace();
         }
         return line;
+    }
+    
+    public void setVolume(double volume) {
+        if(line != null && line.isOpen()) {
+            final FloatControl volumeControl = 
+                    (FloatControl)line.getControl(FloatControl.Type.MASTER_GAIN);
+            volumeControl.setValue((float)Math.log10(volume) * 20);
+        }
+        this.volume = volume;
+    }
+    
+    public double getVolume() {
+        return volume;
     }
     
     public boolean isPlaying() {

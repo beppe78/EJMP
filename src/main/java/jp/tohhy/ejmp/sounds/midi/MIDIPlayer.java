@@ -18,7 +18,7 @@ public class MIDIPlayer implements MediaPlayer {
     private Synthesizer synth;
     private MIDISound playing;
     private boolean isRepeat = false;
-    private int volume = 100;
+    private double volume = 1.0;
 
     public MIDIPlayer() {
         try {
@@ -149,7 +149,7 @@ public class MIDIPlayer implements MediaPlayer {
         return isRepeat;
     }
 
-    public int getVolume() {
+    public double getVolume() {
         return volume;
     }
 
@@ -183,5 +183,9 @@ public class MIDIPlayer implements MediaPlayer {
     public void setMedia(Media media) {
         // TODO 自動生成されたメソッド・スタブ
         
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
     }
 }

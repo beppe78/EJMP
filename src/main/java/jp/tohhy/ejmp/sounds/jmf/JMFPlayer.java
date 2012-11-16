@@ -14,6 +14,7 @@ public class JMFPlayer extends AbstractMediaPlayer implements ControllerListener
     private Player player;
     private JMFSound playing;
     private boolean isPlaying = false;
+    private double volume = 1.0;
 
     public void play() {
         //既に再生中かメディアが存在しなければ何もしない
@@ -26,6 +27,7 @@ public class JMFPlayer extends AbstractMediaPlayer implements ControllerListener
             try {
                 player = Manager.createRealizedPlayer(playing.getDataSource());
                 player.addControllerListener(this);
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
@@ -64,5 +66,19 @@ public class JMFPlayer extends AbstractMediaPlayer implements ControllerListener
             if(isLoop())
                 restart();
         }
+    }
+    
+    public void setVolume(double volume) {
+        if(player != null) {
+            //TODO
+//            final FloatControl volumeControl = 
+//                    (FloatControl)player.getControl(FloatControl.Type.MASTER_GAIN);
+//            volumeControl.setValue((float)Math.log10(volume) * 20);
+        }
+        this.volume = volume;
+    }
+    
+    public double getVolume() {
+        return volume;
     }
 }

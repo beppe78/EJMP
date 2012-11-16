@@ -61,5 +61,17 @@ public interface MediaPlayer {
      * @param isRepeat
      */
     public void setLoop(boolean isRepeat);
+    
+    /**
+     * このプレイヤーの音量を取得する.
+     * @return 1.0をデフォルト音量としての割合
+     */
+    public double getVolume();
+    
+    /**
+     * このプレイヤーの音量を設定する.
+     * @param volume 1.0をデフォルト音量としての割合
+     */
+    public void setVolume(double volume);
 
 }
