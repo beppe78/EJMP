@@ -13,8 +13,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import jp.tohhy.ejmp.interfaces.AbstractMedia;
 
 public abstract class SpiSound extends AbstractMedia {
-    private AudioFileFormat format;
-    private AudioInputStream stream;
+    protected AudioFileFormat fileFormat;
+    protected AudioInputStream stream;
 
     public SpiSound(File file) {
         super(file);
@@ -36,15 +36,9 @@ public abstract class SpiSound extends AbstractMedia {
         init();
     }
     
-    private final void init() {
-        try {
-            this.stream = AudioSystem.getAudioInputStream(getUrl());
-            this.format = AudioSystem.getAudioFileFormat(getUrl());
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void init() {
+        getStream();
+        getFileFormat();
     }
 
     public void reload() {
@@ -61,18 +55,30 @@ public abstract class SpiSound extends AbstractMedia {
             }
         }
         stream = null;
-        format = null;
+        fileFormat = null;
     }
     
-    public AudioFileFormat getFormat() {
-        if(format == null)
-            init();
-        return format;
+    public AudioFileFormat getFileFormat() {
+        if(fileFormat == null)
+            try {
+                this.fileFormat = AudioSystem.getAudioFileFormat(getUrl());
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        return fileFormat;
     }
     
     public AudioInputStream getStream() {
         if(stream == null)
-            init();
+            try {
+                this.stream = AudioSystem.getAudioInputStream(getUrl());
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         return stream;
     }
 

@@ -1,7 +1,11 @@
 package jp.tohhy.ejmp;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,10 +16,11 @@ import javax.swing.JFrame;
 import jp.tohhy.ejmp.sounds.SoundPlayer;
 
 public class Tester {
+ 
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/test.wav");
+        player.setMedia("resources/test.ogg");
 
         JFrame frame = new JFrame();
         Box box = new Box(BoxLayout.X_AXIS);

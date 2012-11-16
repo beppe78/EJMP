@@ -5,6 +5,7 @@ import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
 
 public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
+    private AUSound media;
 
     public void play() {
         if(isLoop()) {
@@ -24,7 +25,8 @@ public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
      * AU再生の実装上停止の度に巻き戻しがかかる.
      */
     public void stop() {
-        getAUMedia().getClip().stop();
+        if(getAUMedia() != null && getAUMedia().getClip() != null)
+            getAUMedia().getClip().stop();
     }
 
     @Deprecated
@@ -45,13 +47,12 @@ public class AUPlayer extends AbstractMediaPlayer implements MediaPlayer {
     }
 
     public void setMedia(Media media) {
-        // TODO 自動生成されたメソッド・スタブ
-        
+        if(media instanceof AUSound)
+            this.media = (AUSound)media;
     }
 
     public Media getMedia() {
-        // TODO 自動生成されたメソッド・スタブ
-        return null;
+        return media;
     }
 
 }
