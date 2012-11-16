@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -14,6 +15,7 @@ import jp.tohhy.ejmp.interfaces.AbstractMedia;
 
 public abstract class SpiSound extends AbstractMedia {
     protected AudioFileFormat fileFormat;
+    protected AudioFormat format;
     protected AudioInputStream stream;
 
     public SpiSound(File file) {
@@ -68,6 +70,12 @@ public abstract class SpiSound extends AbstractMedia {
                 e.printStackTrace();
             }
         return fileFormat;
+    }
+    
+    public AudioFormat getFormat() {
+        if(format == null)
+            return getFileFormat().getFormat();
+        return format;
     }
     
     public AudioInputStream getStream() {

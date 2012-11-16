@@ -20,7 +20,7 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/test.ogg");
+        player.setMedia("resources/test.mp3");
 
         JFrame frame = new JFrame();
         Box box = new Box(BoxLayout.X_AXIS);

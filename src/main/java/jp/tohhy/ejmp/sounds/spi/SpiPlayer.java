@@ -110,7 +110,7 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
     public SourceDataLine getLine(SpiSound media) {
         try {
             if(line == null || !line.isOpen()) {
-                final AudioFormat format = media.getFileFormat().getFormat();
+                final AudioFormat format = media.getFormat();
                 final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
                 line = (SourceDataLine) AudioSystem.getLine(info);
                 line.open(format, buffer.length);
