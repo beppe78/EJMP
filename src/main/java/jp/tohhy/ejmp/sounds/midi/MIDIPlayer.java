@@ -27,23 +27,38 @@ public class MIDIPlayer implements MediaPlayer {
         }
     }
 
-    public void play() {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    if(playing != null) {
-                        playing.getSequencer().getTransmitter().setReceiver(MIDIPlayer.this.synth.getReceiver());
-                        playing.getSequencer().start();
-                        Thread.sleep(100);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (MidiUnavailableException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    /**
+     * 指定したシンセサイザを用いてプレイヤーを再構築する.
+     *
+     * 読み込み済みのサウンドフォント等を破棄し、GCをかけてメモリを解放する.
+     * その後新たにsequencerとsynthを再構築し、openする
+     * @throws MidiUnavailableException
+     */
+    protected void initPlayer(Synthesizer synth) throws MidiUnavailableException {
+        if(this.synth != null) {
+            this.synth.close();
+            this.synth = null;
+            System.gc();
+        }
+        this.synth = synth;
+        if(this.playing != null) {
+            playing.setReceiver(synth.getReceiver());
+            playing.reload();
+            playing.getSequencer().open();
+        }
+        this.synth.open();
+    }
 
+    public void play() {
+        if(playing != null) {
+            try {
+                playing.setReceiver(synth.getReceiver());
+            } catch (MidiUnavailableException e) {
+                e.printStackTrace();
+            }
+            playing.getSequencer().start();
+            MidiUtils.applyVolume(synth, 100);
+        }
     }
 
     public void restart() {
@@ -52,7 +67,7 @@ public class MIDIPlayer implements MediaPlayer {
     }
 
     public void stop() {
-        if(playing != null)
+        if(playing != null && playing.getSequencer().isOpen())
             playing.getSequencer().stop();
     }
 
@@ -68,33 +83,8 @@ public class MIDIPlayer implements MediaPlayer {
         this.playing = new MIDISound(resourcePath);
     }
 
-    public void setMedia(AbstractMedia media) {
-        if(media instanceof MIDISound)
-            this.playing = (MIDISound) media;
-    }
-
     public AbstractMedia getMedia() {
         return playing;
-    }
-
-    /**
-     * 指定したシンセサイザを用いてプレイヤーを再構築する.
-     *
-     * 読み込み済みのサウンドフォント等を破棄し、GCをかけてメモリを解放する.
-     * その後新たにsequencerとsynthを再構築し、openする
-     * @throws MidiUnavailableException
-     */
-    protected void initPlayer(Synthesizer synth) throws MidiUnavailableException {
-        if(this.synth != null) {
-            this.synth.close();
-            this.synth = null;
-        }
-        System.gc();
-        this.synth = synth;
-        if(this.playing != null) {
-            this.playing.reload();
-        }
-        this.synth.open();
     }
 
     /**
@@ -179,8 +169,8 @@ public class MIDIPlayer implements MediaPlayer {
     }
 
     public void setMedia(Media media) {
-        // TODO 自動生成されたメソッド・スタブ
-        
+        if(media instanceof MIDISound)
+            this.playing = (MIDISound) media;
     }
 
     public void setVolume(double volume) {

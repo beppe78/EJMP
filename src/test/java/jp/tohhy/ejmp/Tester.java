@@ -18,8 +18,8 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/test.aiff");
-
+        player.setMedia("resources/test.mid");
+        
         JFrame frame = new JFrame();
         Box buttonsA = new Box(BoxLayout.X_AXIS);
         buttonsA.add(new JButton(new AbstractAction("play") {
