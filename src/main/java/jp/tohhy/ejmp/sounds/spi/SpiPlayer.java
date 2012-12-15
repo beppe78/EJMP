@@ -1,7 +1,6 @@
 package jp.tohhy.ejmp.sounds.spi;
 
 import java.io.IOException;
-import java.lang.Thread.State;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -24,12 +23,16 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
     
     public abstract SpiSound getSpiSound();
 
-    public void createPlayThread(final SpiSound media) {
+    protected int readStream(SpiSound media, byte[] buffer) throws IOException {
+        return media.getStream().read(buffer, 0, buffer.length);
+    }
+
+    private void createPlayThread(final SpiSound media) {
         createThread(new Playable() {
             public void play(PlayThread thread) {
                 final SourceDataLine line = getLine(media);
                 line.start();
-                setPlaying(true);
+                isPlaying = true;
                 int currentRead = 0;
                 try {
                     while (isPlaying()) {
@@ -43,73 +46,43 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
                 } catch (IOException e) {
                       e.printStackTrace();
                 }
-                setPlaying(false);
+                isPlaying = false;
                 //終端で終了していた場合はループする
                 if(isLoop() && currentRead == -1) {
                     restart();
                 }
+                //lineが再生し終わるまでスレッドを保持
+                //これを入れないとstop直後にプレイヤーが停止していることが保証されない
+                line.drain();
             }
         });
     }
 
-    protected int readStream(SpiSound media, byte[] buffer) throws IOException {
-        return media.getStream().read(buffer, 0, buffer.length);
-    }
-
-    public void startThread() {
+    private void startThread() {
         if(playThread != null) {
             playThread.start();
         }
     }
 
-    public void createThread(Playable p) {
+    private void createThread(Playable p) {
         playThread = new PlayThread(p);        
     }
 
-    public void disposeThread() {
+    private void disposeThread() {
         //再生中なら止めてスレッドを終了させる
         if(isPlaying && playThread != null) {
             playThread.setEnd(true);
             //スレッドが終了するまでウェイト
-            while(playThread.getState() != State.TERMINATED) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                playThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         playThread = null;
     }
 
-    public Media getMedia() {
-        return getSpiSound();
-    }
-    
-    public void play() {
-        if(getMedia() != null && !isPlaying()) {
-            createPlayThread(getSpiSound());
-            startThread();
-        }
-    }
-    
-    public void stop() {
-        disposeThread();
-        setPlaying(false);
-    }
-    
-    public void rewind() {
-        if(isPlaying()) {
-            stop();
-            getMedia().reload();
-            play();
-        } else {
-            stop();
-            getMedia().reload();
-        }
-    }
-    
-    public SourceDataLine getLine(SpiSound media) {
+    private SourceDataLine getLine(SpiSound media) {
         try {
             if(line == null || !line.isOpen()) {
                 final AudioFormat format = media.getFormat();
@@ -123,6 +96,29 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
         }
         return line;
     }
+
+    public void play() {
+        if(getMedia() != null && !isPlaying()) {
+            createPlayThread(getSpiSound());
+            startThread();
+        }
+    }
+    
+    public void stop() {
+        disposeThread();
+        this.isPlaying = false;
+    }
+    
+    public void rewind() {
+        if(isPlaying()) {
+            stop();
+            getMedia().reload();
+            play();
+        } else {
+            stop();
+            getMedia().reload();
+        }
+    }
     
     public void setVolume(double volume) {
         if(line != null && line.isOpen()) {
@@ -133,16 +129,15 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
         this.volume = volume;
     }
     
-    public double getVolume() {
-        return volume;
-    }
-    
     public boolean isPlaying() {
         return isPlaying;
     }
 
-    public void setPlaying(boolean isPlaying) {
-        this.isPlaying = isPlaying;
+    public double getVolume() {
+        return volume;
     }
-
+    
+    public Media getMedia() {
+        return getSpiSound();
+    }
 }

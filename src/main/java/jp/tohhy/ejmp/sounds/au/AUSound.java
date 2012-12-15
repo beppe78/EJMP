@@ -1,49 +1,73 @@
 package jp.tohhy.ejmp.sounds.au;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
-import jp.tohhy.ejmp.interfaces.AbstractMedia;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 
-public class AUSound extends AbstractMedia {
-    private AudioClip clip;
+import jp.tohhy.ejmp.sounds.spi.SpiSound;
+
+public class AUSound extends SpiSound {
+    private AudioFormat format;
+    private AudioInputStream decodedStream;
 
     public AUSound(File file) {
         super(file);
-        loadAudioClip(getUrl());
     }
 
     public AUSound(String resourcePath) {
         super(resourcePath);
-        loadAudioClip(getUrl());
     }
 
-    public void reload() {
-        setClip(null);
-        loadAudioClip(getUrl());
+    public AUSound(URI uri) {
+        super(uri);
     }
 
+    public AUSound(URL url) {
+        super(url);
+    }
     
-    private void loadAudioClip(URL url) {
-        setClip(Applet.newAudioClip(url));
-    }
-
-    public void setClip(AudioClip clip) {
-        this.clip = clip;
-    }
-
-    public AudioClip getClip() {
-        return clip;
-    }
-
     public MediaType getMediaType() {
         return MediaType.AU;
     }
-
-    public void dispose() throws Exception {
-        clip = null;
+    
+    @Override
+    public AudioFormat getFormat() {
+        if(this.format == null) {
+            final AudioFormat baseFormat = getFileFormat().getFormat();
+            this.format = new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    baseFormat.getSampleRate(),
+                    baseFormat.getSampleSizeInBits() * 2,
+                    baseFormat.getChannels(),
+                    baseFormat.getFrameSize() * 2,
+                    baseFormat.getFrameRate(),
+                    true);
+        }
+        return this.format;
     }
-
+    
+    @Override
+    public void dispose() {
+        super.dispose();
+        if(decodedStream != null) {
+            try {
+                decodedStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        decodedStream = null;
+        format = null;
+    }
+    
+    public AudioInputStream getStream() {
+        if(decodedStream == null)
+            decodedStream = AudioSystem.getAudioInputStream(getFormat(), getRawStream());
+        return decodedStream;
+    }
 }

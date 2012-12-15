@@ -12,6 +12,7 @@ import javax.sound.sampled.AudioSystem;
 import jp.tohhy.ejmp.sounds.spi.SpiSound;
 
 public class OggSound extends SpiSound {
+    private AudioFormat format;
     private AudioInputStream decodedStream;
 
     public OggSound(File file) {
@@ -35,12 +36,6 @@ public class OggSound extends SpiSound {
     }
     
     @Override
-    public void init() {
-        super.init();
-        getDecodedStream();
-    }
-    
-    @Override
     public void dispose() {
         super.dispose();
         if(decodedStream != null) {
@@ -50,27 +45,31 @@ public class OggSound extends SpiSound {
                 e.printStackTrace();
             }
         }
+        format = null;
         decodedStream = null;
     }
     
     public AudioFormat getFormat() {
-        final AudioFormat baseFormat = getFileFormat().getFormat();
-        int nSampleSizeInBits = baseFormat.getSampleSizeInBits();
-        if (nSampleSizeInBits <= 0) nSampleSizeInBits = 16;
-        if ((baseFormat.getEncoding() == AudioFormat.Encoding.ULAW) || 
-                (baseFormat.getEncoding() == AudioFormat.Encoding.ALAW)) nSampleSizeInBits = 16;
-        if (nSampleSizeInBits != 8) nSampleSizeInBits = 16;
-        return new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
-                baseFormat.getSampleRate(), nSampleSizeInBits, 
-                baseFormat.getChannels(), 
-                baseFormat.getChannels() * (nSampleSizeInBits / 8), 
-                baseFormat.getSampleRate(), 
-                false);
+        if(this.format == null) {
+            final AudioFormat baseFormat = getFileFormat().getFormat();
+            int nSampleSizeInBits = baseFormat.getSampleSizeInBits();
+            if (nSampleSizeInBits <= 0) nSampleSizeInBits = 16;
+            if ((baseFormat.getEncoding() == AudioFormat.Encoding.ULAW) || 
+                    (baseFormat.getEncoding() == AudioFormat.Encoding.ALAW)) nSampleSizeInBits = 16;
+            if (nSampleSizeInBits != 8) nSampleSizeInBits = 16;
+            this.format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
+                    baseFormat.getSampleRate(), nSampleSizeInBits, 
+                    baseFormat.getChannels(), 
+                    baseFormat.getChannels() * (nSampleSizeInBits / 8), 
+                    baseFormat.getSampleRate(), 
+                    false);
+        }
+        return this.format;
     }
     
-    public AudioInputStream getDecodedStream() {
+    public AudioInputStream getStream() {
         if(decodedStream == null)
-            decodedStream = AudioSystem.getAudioInputStream(getFormat(), getStream());
+            decodedStream = AudioSystem.getAudioInputStream(getFormat(), getRawStream());
         return decodedStream;
     }
 }

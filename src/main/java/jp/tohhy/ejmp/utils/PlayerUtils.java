@@ -35,6 +35,7 @@ public class PlayerUtils {
                 e.printStackTrace();
             }
         }
+        System.err.println("can't create player for:" + media);
         return null;
     }
 

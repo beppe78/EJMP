@@ -13,6 +13,7 @@ import jp.tohhy.ejmp.sounds.spi.SpiSound;
 
 
 public class Mp3Sound extends SpiSound {
+    private AudioFormat format;
     private AudioInputStream decodedStream;
 
     public Mp3Sound(File file) {
@@ -34,11 +35,7 @@ public class Mp3Sound extends SpiSound {
     public MediaType getMediaType() {
         return MediaType.MP3;
     }
-    @Override
-    public void init() {
-        super.init();
-        getDecodedStream();
-    }
+
     
     @Override
     public void dispose() {
@@ -51,24 +48,27 @@ public class Mp3Sound extends SpiSound {
             }
         }
         decodedStream = null;
+        format = null;
     }
     
     
     public AudioFormat getFormat() {
-        final AudioFormat baseFormat = getFileFormat().getFormat();
-        AudioFormat f = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
-                baseFormat.getSampleRate(),
-                16,
-                baseFormat.getChannels(),
-                baseFormat.getChannels() * 2,
-                baseFormat.getSampleRate(),
-                false);
-        return f;
+        if(this.format == null) {
+            final AudioFormat baseFormat = getFileFormat().getFormat();
+            this.format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 
+                    baseFormat.getSampleRate(),
+                    16,
+                    baseFormat.getChannels(),
+                    baseFormat.getChannels() * 2,
+                    baseFormat.getSampleRate(),
+                    false);
+        }
+        return this.format;
     }
     
-    public AudioInputStream getDecodedStream() {
+    public AudioInputStream getStream() {
         if(decodedStream == null) {
-            decodedStream = AudioSystem.getAudioInputStream(getFormat(), getStream());
+            decodedStream = AudioSystem.getAudioInputStream(getFormat(), getRawStream());
         }
         return decodedStream;
     }

@@ -16,6 +16,7 @@ import jp.tohhy.ejmp.utils.PlayerUtils;
  */
 public class SoundPlayer extends AbstractMediaPlayer {
     private MediaPlayer player;
+    private double volume = 1.0;
 
     public SoundPlayer() {}
 
@@ -56,6 +57,7 @@ public class SoundPlayer extends AbstractMediaPlayer {
             if(player.getMedia() != media)
                 player.setMedia(media);
             player.setLoop(isLoop());
+            player.setVolume(volume);
         }
     }
 
@@ -89,10 +91,14 @@ public class SoundPlayer extends AbstractMediaPlayer {
     }
 
     public double getVolume() {
-        return player.getVolume();
+        if(player != null)
+            return player.getVolume();
+        return this.volume;
     }
 
     public void setVolume(double volume) {
-        player.setVolume(volume);
+        this.volume = volume;
+        if(player != null)
+            player.setVolume(volume);
     }
 }

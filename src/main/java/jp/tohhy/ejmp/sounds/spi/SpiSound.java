@@ -38,7 +38,7 @@ public abstract class SpiSound extends AbstractMedia {
         init();
     }
     
-    public void init() {
+    private void init() {
         getStream();
         getFileFormat();
     }
@@ -78,7 +78,7 @@ public abstract class SpiSound extends AbstractMedia {
         return format;
     }
     
-    public AudioInputStream getStream() {
+    protected AudioInputStream getRawStream() {
         if(stream == null)
             try {
                 this.stream = AudioSystem.getAudioInputStream(getUrl());
@@ -88,6 +88,10 @@ public abstract class SpiSound extends AbstractMedia {
                 e.printStackTrace();
             }
         return stream;
+    }
+    
+    public AudioInputStream getStream() {
+        return getRawStream();
     }
 
 }
