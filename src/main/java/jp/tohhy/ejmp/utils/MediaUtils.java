@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import jp.tohhy.ejmp.interfaces.AbstractMedia;
+import jp.tohhy.ejmp.sounds.aiff.AiffSound;
+import jp.tohhy.ejmp.sounds.ape.ApeSound;
 import jp.tohhy.ejmp.sounds.au.AUSound;
 import jp.tohhy.ejmp.sounds.midi.MIDISound;
 import jp.tohhy.ejmp.sounds.mp3.Mp3Sound;
@@ -34,7 +36,7 @@ public class MediaUtils {
     private static Class<? extends AbstractMedia> getSuitableMediaClassForExtension(String extension) {
         final String ext = extension.toLowerCase();
         if(ext.equals("aif") || ext.equals("aiff")) {
-            //未対応
+            return AiffSound.class;
         } else if(ext.equals("wav")) {
             return WaveSound.class;
         } else if(ext.equals("mp3")) {
@@ -49,6 +51,8 @@ public class MediaUtils {
             //未対応
         } else if(ext.equals("mid") || ext.equals("midi")) {
             return MIDISound.class;
+        } else if(ext.equals("ape")) {
+            return ApeSound.class;
         }
         return null;
     }

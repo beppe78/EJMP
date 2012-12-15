@@ -2,6 +2,10 @@ package jp.tohhy.ejmp.utils;
 
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
+import jp.tohhy.ejmp.sounds.aiff.AiffPlayer;
+import jp.tohhy.ejmp.sounds.aiff.AiffSound;
+import jp.tohhy.ejmp.sounds.ape.ApePlayer;
+import jp.tohhy.ejmp.sounds.ape.ApeSound;
 import jp.tohhy.ejmp.sounds.au.AUPlayer;
 import jp.tohhy.ejmp.sounds.au.AUSound;
 import jp.tohhy.ejmp.sounds.midi.MIDIPlayer;
@@ -55,6 +59,10 @@ public class PlayerUtils {
             return AUPlayer.class;
         } else if(media instanceof OggSound) {
             return OggPlayer.class;
+        } else if(media instanceof AiffSound) {
+            return AiffPlayer.class;
+        } else if(media instanceof ApeSound) {
+            return ApePlayer.class;
         }
         return null;
     }

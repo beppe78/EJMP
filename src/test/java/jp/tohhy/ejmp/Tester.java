@@ -18,7 +18,7 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/test.mp3");
+        player.setMedia("resources/test.ape");
 
         JFrame frame = new JFrame();
         Box buttons = new Box(BoxLayout.X_AXIS);
