@@ -18,6 +18,7 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
     private SourceDataLine line;
     private boolean isPlaying = false;
     private double volume = 1.0;
+    private double pan = 0.0;
     private PlayThread playThread;
     protected final byte[] buffer = new byte[20480];
     
@@ -90,6 +91,7 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
                 line = (SourceDataLine) AudioSystem.getLine(info);
                 line.open(format, buffer.length);
                 setVolume(volume);
+                setPan(pan);
             }
         } catch (LineUnavailableException e) {
             e.printStackTrace();
@@ -124,9 +126,22 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
         if(line != null && line.isOpen()) {
             final FloatControl volumeControl = 
                     (FloatControl)line.getControl(FloatControl.Type.MASTER_GAIN);
-            volumeControl.setValue((float)Math.log10(volume) * 20);
+            float value = (float)Math.log10(volume) * 20;
+            volumeControl.setValue(value);
         }
         this.volume = volume;
+    }
+    
+    public void setPan(double pan) {
+        if(line != null && line.isOpen()) {
+            final FloatControl panControl = 
+                    (FloatControl)line.getControl(FloatControl.Type.PAN);
+            float value = (float)pan;
+            if(value > 1.0) value = 1.0f;
+            if(value < -1.0) value = -1.0f;
+            panControl.setValue(value);
+        }
+        this.pan = pan;
     }
     
     public boolean isPlaying() {
@@ -137,6 +152,10 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
         return volume;
     }
     
+    public double getPan() {
+        return pan;
+    }
+
     public Media getMedia() {
         return getSpiSound();
     }

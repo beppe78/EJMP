@@ -13,7 +13,6 @@ import jp.tohhy.ejmp.interfaces.MediaPlayer;
 import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
 
-@SuppressWarnings("restriction")
 public class MIDIPlayer implements MediaPlayer {
     private Synthesizer synth;
     private MIDISound playing;
@@ -22,7 +21,7 @@ public class MIDIPlayer implements MediaPlayer {
 
     public MIDIPlayer() {
         try {
-            refreshPlayer(new SoftSynthesizer());
+            initPlayer(new SoftSynthesizer());
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
         }
@@ -47,14 +46,14 @@ public class MIDIPlayer implements MediaPlayer {
 
     }
 
-
     public void restart() {
         playing.reload();
         play();
     }
 
     public void stop() {
-        playing.getSequencer().stop();
+        if(playing != null)
+            playing.getSequencer().stop();
     }
 
     public boolean isPlaying() {
@@ -85,7 +84,7 @@ public class MIDIPlayer implements MediaPlayer {
      * その後新たにsequencerとsynthを再構築し、openする
      * @throws MidiUnavailableException
      */
-    protected void refreshPlayer(Synthesizer synth) throws MidiUnavailableException {
+    protected void initPlayer(Synthesizer synth) throws MidiUnavailableException {
         if(this.synth != null) {
             this.synth.close();
             this.synth = null;
@@ -94,7 +93,6 @@ public class MIDIPlayer implements MediaPlayer {
         this.synth = synth;
         if(this.playing != null) {
             this.playing.reload();
-
         }
         this.synth.open();
     }
@@ -106,7 +104,7 @@ public class MIDIPlayer implements MediaPlayer {
     public void loadSountFont(File soundfont) {
         //SoundBankはOpen後に指定する
         try {
-            refreshPlayer(new SoftSynthesizer());
+            initPlayer(new SoftSynthesizer());
             SF2Soundbank bank = new SF2Soundbank(soundfont);
             synth.unloadAllInstruments(synth.getDefaultSoundbank());
             synth.loadAllInstruments(bank);
@@ -124,7 +122,7 @@ public class MIDIPlayer implements MediaPlayer {
      */
     public void loadSynthesizer(Synthesizer synth) {
         try {
-            refreshPlayer(synth);
+            initPlayer(synth);
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
         }
@@ -187,5 +185,15 @@ public class MIDIPlayer implements MediaPlayer {
 
     public void setVolume(double volume) {
         this.volume = volume;
+    }
+
+    public double getPan() {
+        // TODO 自動生成されたメソッド・スタブ
+        return 0;
+    }
+
+    public void setPan(double pan) {
+        // TODO 自動生成されたメソッド・スタブ
+        
     }
 }

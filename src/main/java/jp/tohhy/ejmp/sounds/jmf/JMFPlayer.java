@@ -81,4 +81,13 @@ public class JMFPlayer extends AbstractMediaPlayer implements ControllerListener
     public double getVolume() {
         return volume;
     }
+
+    public double getPan() {
+        // TODO
+        return 0;
+    }
+
+    public void setPan(double pan) {
+        // TODO
+    }
 }

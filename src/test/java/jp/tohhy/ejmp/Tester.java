@@ -18,7 +18,7 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/test.wav");
+        player.setMedia("resources/test.aiff");
 
         JFrame frame = new JFrame();
         Box buttonsA = new Box(BoxLayout.X_AXIS);
@@ -65,12 +65,19 @@ public class Tester {
                 player.setVolume((double)volume.getValue()/100);
             }
         });
+        final JSlider pan = new JSlider(-100, 100, 0);
+        pan.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                player.setPan((double)pan.getValue()/100);
+            }
+        });
         frame.setBounds(100,100,300,200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);
         wrapper.add(buttonsA);
         wrapper.add(buttonsB);
         wrapper.add(isLoop);
         wrapper.add(volume);
+        wrapper.add(pan);
         frame.add(wrapper);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

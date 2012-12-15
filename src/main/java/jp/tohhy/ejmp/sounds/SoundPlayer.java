@@ -17,6 +17,7 @@ import jp.tohhy.ejmp.utils.PlayerUtils;
 public class SoundPlayer extends AbstractMediaPlayer {
     private MediaPlayer player;
     private double volume = 1.0;
+    private double pan = 0.0;
     private boolean isFading = false;
     private double fadeVolume = 1.0;
 
@@ -51,6 +52,10 @@ public class SoundPlayer extends AbstractMediaPlayer {
     }
     
     private void preparePlayer(Media media) {
+        if(media == null) {
+            System.err.println("preparePlayer: received media is null");
+            return;
+        }
         if(player == null || player.getClass() != PlayerUtils.getSuitablePlayerClass(media)) {
             if(player != null) player.stop();
             player = PlayerUtils.createSuitablePlayer(media);
@@ -157,5 +162,17 @@ public class SoundPlayer extends AbstractMediaPlayer {
 
     protected void setFading(boolean isFading) {
         this.isFading = isFading;
+    }
+
+    public double getPan() {
+        if(player != null)
+            return player.getPan();
+        return this.pan;
+    }
+
+    public void setPan(double pan) {
+        this.pan = pan;
+        if(player != null)
+            player.setPan(pan);
     }
 }

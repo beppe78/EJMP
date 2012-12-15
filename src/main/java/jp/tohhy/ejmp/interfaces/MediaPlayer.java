@@ -73,5 +73,17 @@ public interface MediaPlayer {
      * @param volume 1.0をデフォルト音量としての割合
      */
     public void setVolume(double volume);
+    
+    /**
+     * このプレイヤーの再生音の左右位置を取得する.
+     * @return -1.0 (左チャネルのみ) 〜 1.0 (右チャネルのみ)
+     */
+    public double getPan();
+    
+    /**
+     * このプレイヤーの再生音の左右位置を設定する.
+     * @param pan -1.0 (左チャネルのみ) 〜 1.0 (右チャネルのみ)
+     */
+    public void setPan(double pan);
 
 }
