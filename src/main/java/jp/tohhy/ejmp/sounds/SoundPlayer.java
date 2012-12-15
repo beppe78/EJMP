@@ -17,6 +17,8 @@ import jp.tohhy.ejmp.utils.PlayerUtils;
 public class SoundPlayer extends AbstractMediaPlayer {
     private MediaPlayer player;
     private double volume = 1.0;
+    private boolean isFading = false;
+    private double fadeVolume = 1.0;
 
     public SoundPlayer() {}
 
@@ -100,5 +102,60 @@ public class SoundPlayer extends AbstractMediaPlayer {
         this.volume = volume;
         if(player != null)
             player.setVolume(volume);
+    }
+
+    public double getFadeVolume() {
+        return fadeVolume;
+    }
+
+    public boolean isFading() {
+        return isFading;
+    }
+    
+    public void fade(double toVolume, int timeMs) {
+        if(!isFading) {
+            new Fade(this, toVolume, timeMs);
+        }
+    }
+    
+    /**
+     * ボリューム0から現在のボリュームに向かってフェードインする再生を開始する.
+     */
+    public void fadeIn(int timeMs) {
+        if(!isFading) {
+            stop();
+            final double toVolume = volume;
+            this.setVolume(0);
+            play();
+            new Fade(this, toVolume, timeMs);
+        }
+    }
+    
+    /**
+     * 現在のボリュームからボリューム0に向かってフェードアウトする再生を開始する.
+     * フェードアウト後は自動で停止し、ボリュームはフェードアウト前のボリュームに変更される.
+     */
+    public void fadeOut(int timeMs) {
+        if(!isFading) {
+            final double currentVolume = volume;
+            play();
+            new Fade(this, 0, timeMs, new Runnable() {
+                
+                public void run() {
+                    stop();
+                    volume = currentVolume;
+                }
+            });
+        }
+    }
+
+    protected void setFadeVolume(double fadeVolume) {
+        this.fadeVolume = fadeVolume;
+        if(isFading)
+            player.setVolume(fadeVolume);
+    }
+
+    protected void setFading(boolean isFading) {
+        this.isFading = isFading;
     }
 }

@@ -18,25 +18,42 @@ public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/test.ape");
+        player.setMedia("resources/test.wav");
 
         JFrame frame = new JFrame();
-        Box buttons = new Box(BoxLayout.X_AXIS);
-        buttons.add(new JButton(new AbstractAction("play") {
+        Box buttonsA = new Box(BoxLayout.X_AXIS);
+        buttonsA.add(new JButton(new AbstractAction("play") {
             public void actionPerformed(ActionEvent e) {
                 player.play();
             }
         }));
-        buttons.add(new JButton(new AbstractAction("stop") {
+        buttonsA.add(new JButton(new AbstractAction("stop") {
             public void actionPerformed(ActionEvent e) {
                 player.stop();
             }
         }));
-        buttons.add(new JButton(new AbstractAction("restart") {
+        buttonsA.add(new JButton(new AbstractAction("restart") {
             public void actionPerformed(ActionEvent e) {
                 player.restart();
             }
         }));
+        Box buttonsB = new Box(BoxLayout.X_AXIS);
+        buttonsB.add(new JButton(new AbstractAction("fadeIn") {
+            public void actionPerformed(ActionEvent e) {
+                player.fadeIn(2000);
+            }
+        }));
+        buttonsB.add(new JButton(new AbstractAction("fadeOut") {
+            public void actionPerformed(ActionEvent e) {
+                player.fadeOut(2000);
+            }
+        }));
+        buttonsB.add(new JButton(new AbstractAction("rewind") {
+            public void actionPerformed(ActionEvent e) {
+                player.rewind();
+            }
+        }));
+        
         JCheckBox isLoop = new JCheckBox(new AbstractAction("isLoop") {
             public void actionPerformed(ActionEvent e) {
                 player.setLoop(((JCheckBox)e.getSource()).isSelected());
@@ -50,7 +67,8 @@ public class Tester {
         });
         frame.setBounds(100,100,300,200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);
-        wrapper.add(buttons);
+        wrapper.add(buttonsA);
+        wrapper.add(buttonsB);
         wrapper.add(isLoop);
         wrapper.add(volume);
         frame.add(wrapper);
