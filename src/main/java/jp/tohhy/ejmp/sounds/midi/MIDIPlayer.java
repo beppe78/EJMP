@@ -10,6 +10,7 @@ import jp.tohhy.ejmp.interfaces.AbstractMedia;
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.interfaces.MediaPlayer;
 
+import com.sun.media.sound.AudioSynthesizer;
 import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
 
@@ -18,12 +19,20 @@ public class MIDIPlayer implements MediaPlayer {
     private MIDISound playing;
     private boolean isRepeat = false;
     private double volume = 1.0;
+    private double pan = 0;
 
     public MIDIPlayer() {
         try {
             initPlayer(new SoftSynthesizer());
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
+        }
+        findAudioSynth();
+    }
+    
+    private void findAudioSynth() {
+        if(synth instanceof AudioSynthesizer) {
+            System.out.println("ok!");
         }
     }
 
@@ -42,11 +51,15 @@ public class MIDIPlayer implements MediaPlayer {
         }
         this.synth = synth;
         if(this.playing != null) {
-            playing.setReceiver(synth.getReceiver());
-            playing.reload();
-            playing.getSequencer().open();
+            initPlaying();
         }
         this.synth.open();
+    }
+    
+    private void initPlaying() throws MidiUnavailableException{
+        playing.setReceiver(synth.getReceiver());
+        playing.reload();
+        playing.getSequencer().open();
     }
 
     public void play() {
@@ -57,7 +70,14 @@ public class MIDIPlayer implements MediaPlayer {
                 e.printStackTrace();
             }
             playing.getSequencer().start();
-            MidiUtils.applyVolume(synth, 100);
+            //ボリュームが適用可能になるまで待機
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            MidiUtils.applyVolume(synth, volume);
+            MidiUtils.applyPan(synth, pan);
         }
     }
 
@@ -141,11 +161,6 @@ public class MIDIPlayer implements MediaPlayer {
         return volume;
     }
 
-//    public void setVolume(int volume) {
-//        this.volume = volume;
-//        MidiUtils.applyVolume(synth, volume);
-//    }
-
     public void setPlaying(MIDISound playing) {
         if(isPlaying()) {
             this.playing = playing;
@@ -159,13 +174,19 @@ public class MIDIPlayer implements MediaPlayer {
         return playing;
     }
 
-    public void run() {
-        // TODO 自動生成されたメソッド・スタブ
-    }
-
     public void rewind() {
-        // TODO 自動生成されたメソッド・スタブ
-        
+        try {
+            if(isPlaying()) {
+                stop();
+                initPlaying();
+                play();
+            } else {
+                stop();
+                initPlaying();
+            }
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setMedia(Media media) {
@@ -175,15 +196,15 @@ public class MIDIPlayer implements MediaPlayer {
 
     public void setVolume(double volume) {
         this.volume = volume;
+        MidiUtils.applyVolume(synth, volume);
     }
 
     public double getPan() {
-        // TODO 自動生成されたメソッド・スタブ
         return 0;
     }
 
     public void setPan(double pan) {
-        // TODO 自動生成されたメソッド・スタブ
-        
+        this.pan = pan;
+        MidiUtils.applyPan(synth, pan);
     }
 }
