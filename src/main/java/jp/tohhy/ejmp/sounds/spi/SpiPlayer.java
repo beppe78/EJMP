@@ -20,12 +20,13 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
     private double volume = 1.0;
     private double pan = 0.0;
     private PlayThread playThread;
-    protected final byte[] buffer = new byte[20480];
+    private int bufferSize = 20480;
+    protected byte[] buffer = new byte[getBufferSize()];
     
     public abstract SpiSound getSpiSound();
 
     protected int readStream(SpiSound media, byte[] buffer) throws IOException {
-        return media.getStream().read(buffer, 0, buffer.length);
+        return media.getDecodedStream().read(buffer, 0, buffer.length);
     }
 
     private void createPlayThread(final SpiSound media) {
@@ -89,6 +90,8 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
                 final AudioFormat format = media.getFormat();
                 final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
                 line = (SourceDataLine) AudioSystem.getLine(info);
+                if(buffer.length != getBufferSize())
+                    buffer = new byte[getBufferSize()];
                 line.open(format, buffer.length);
                 setVolume(volume);
                 setPan(pan);
@@ -158,5 +161,13 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
 
     public Media getMedia() {
         return getSpiSound();
+    }
+
+    public int getBufferSize() {
+        return bufferSize;
+    }
+
+    public void setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
     }
 }

@@ -39,7 +39,7 @@ public abstract class SpiSound extends AbstractMedia {
     }
     
     private void init() {
-        getStream();
+        getDecodedStream();
         getFileFormat();
     }
 
@@ -90,7 +90,7 @@ public abstract class SpiSound extends AbstractMedia {
         return stream;
     }
     
-    public AudioInputStream getStream() {
+    public AudioInputStream getDecodedStream() {
         return getRawStream();
     }
 

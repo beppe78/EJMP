@@ -46,7 +46,7 @@ public class ApeSound extends SpiSound {
         decodedStream = null;
     }
     
-    public AudioInputStream getStream() {
+    public AudioInputStream getDecodedStream() {
         if(decodedStream == null)
             decodedStream = AudioSystem.getAudioInputStream(getFormat(), getRawStream());
         return decodedStream;

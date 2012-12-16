@@ -67,7 +67,7 @@ public class OggSound extends SpiSound {
         return this.format;
     }
     
-    public AudioInputStream getStream() {
+    public AudioInputStream getDecodedStream() {
         if(decodedStream == null)
             decodedStream = AudioSystem.getAudioInputStream(getFormat(), getRawStream());
         return decodedStream;

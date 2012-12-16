@@ -65,7 +65,7 @@ public class AUSound extends SpiSound {
         format = null;
     }
     
-    public AudioInputStream getStream() {
+    public AudioInputStream getDecodedStream() {
         if(decodedStream == null)
             decodedStream = AudioSystem.getAudioInputStream(getFormat(), getRawStream());
         return decodedStream;
