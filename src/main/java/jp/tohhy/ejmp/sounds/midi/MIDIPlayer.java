@@ -21,6 +21,7 @@ public class MIDIPlayer extends SpiPlayer {
     }
 
     public void setMedia(Media media) {
+        if(getMedia() != media)
         if(media instanceof MIDISound)
             this.media = (MIDISound)media;
     }

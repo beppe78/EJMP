@@ -8,8 +8,11 @@ public class AiffPlayer extends SpiPlayer {
     private AiffSound media;
 
     public void setMedia(Media media) {
-        if(media instanceof AiffSound)
+        if(getMedia() != media)
+        if(media instanceof AiffSound) {
             this.media = (AiffSound) media;
+            rewind();
+        }
     }
 
     @Override

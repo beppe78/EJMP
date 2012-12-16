@@ -9,8 +9,11 @@ public class OggPlayer extends SpiPlayer {
     
 
     public void setMedia(Media media) {
-        if(media instanceof OggSound)
+        if(getMedia() != media)
+        if(media instanceof OggSound) {
             this.media = (OggSound)media;
+            rewind();
+        }
     }
 
     @Override

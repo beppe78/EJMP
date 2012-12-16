@@ -8,8 +8,11 @@ public class ApePlayer extends SpiPlayer {
     private ApeSound media;
 
     public void setMedia(Media media) {
-        if(media instanceof ApeSound)
+        if(getMedia() != media)
+        if(media instanceof ApeSound) {
             this.media = (ApeSound) media;
+            rewind();
+        }
     }
 
     @Override

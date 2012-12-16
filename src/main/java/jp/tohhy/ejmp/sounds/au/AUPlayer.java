@@ -8,8 +8,11 @@ public class AUPlayer extends SpiPlayer {
     private AUSound media;
 
     public void setMedia(Media media) {
-        if(media instanceof AUSound)
+        if(getMedia() != media)
+        if(media instanceof AUSound) {
             this.media = (AUSound) media;
+            rewind();
+        }
     }
 
     @Override
