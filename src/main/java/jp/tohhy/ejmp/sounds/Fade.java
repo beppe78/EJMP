@@ -39,6 +39,10 @@ public class Fade {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                if(!player.isFading()) {
+                    timer.cancel();
+                    return;
+                }
                 player.setFadeVolume(player.getFadeVolume() + dVolume);
                 if(dVolume > 0) {
                     if(player.getFadeVolume() >= toVolume) {

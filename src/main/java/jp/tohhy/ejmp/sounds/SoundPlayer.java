@@ -123,6 +123,12 @@ public class SoundPlayer extends AbstractMediaPlayer {
         }
     }
     
+    public void fade(double toVolume, int timeMs, Runnable endAction) {
+        if(!isFading) {
+            new Fade(this, toVolume, timeMs, endAction);
+        }
+    }
+    
     /**
      * ボリューム0から現在のボリュームに向かってフェードインする再生を開始する.
      */
@@ -132,7 +138,7 @@ public class SoundPlayer extends AbstractMediaPlayer {
             final double toVolume = volume;
             this.setVolume(0);
             play();
-            new Fade(this, toVolume, timeMs);
+            fade(toVolume, timeMs);
         }
     }
     
@@ -144,14 +150,22 @@ public class SoundPlayer extends AbstractMediaPlayer {
         if(!isFading) {
             final double currentVolume = volume;
             play();
-            new Fade(this, 0, timeMs, new Runnable() {
-                
+            fade(0, timeMs, new Runnable() {
                 public void run() {
                     stop();
                     volume = currentVolume;
                 }
             });
         }
+    }
+    
+    /**
+     * フェードを途中で停止する.終了時アクションは実行されない.
+     * プレイヤーの音量はその時点のフェード音量になる.
+     */
+    public void stopFade() {
+        this.isFading = false;
+        this.volume = fadeVolume;
     }
 
     protected void setFadeVolume(double fadeVolume) {

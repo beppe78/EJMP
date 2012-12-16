@@ -48,6 +48,11 @@ public class Tester {
                 player.fadeOut(2000);
             }
         }));
+        buttonsB.add(new JButton(new AbstractAction("stopFade") {
+            public void actionPerformed(ActionEvent e) {
+                player.stopFade();
+            }
+        }));
         buttonsB.add(new JButton(new AbstractAction("rewind") {
             public void actionPerformed(ActionEvent e) {
                 player.rewind();
