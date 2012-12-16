@@ -54,7 +54,7 @@ public class MIDISound extends SpiSound {
      * その後新たにsequencerとsynthを再構築し、openする
      * @throws MidiUnavailableException
      */
-    private void init(Synthesizer synth) {
+    public void init(Synthesizer synth) {
         this.dispose();
         try {
             this.synth = synth;
