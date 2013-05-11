@@ -44,17 +44,17 @@ public abstract class SpiSound extends AbstractMedia {
     }
 
     public void reload() {
-        dispose();
+        try {
+            dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         init();
     }
 
-    public void dispose() {
+    public void dispose() throws IOException {
         if(stream != null) {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            stream.close();
         }
         stream = null;
         fileFormat = null;
@@ -63,7 +63,7 @@ public abstract class SpiSound extends AbstractMedia {
     public AudioFileFormat getFileFormat() {
         if(fileFormat == null)
             try {
-                this.fileFormat = AudioSystem.getAudioFileFormat(getUrl());
+                this.fileFormat = AudioSystem.getAudioFileFormat(getURL());
             } catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -81,7 +81,7 @@ public abstract class SpiSound extends AbstractMedia {
     protected AudioInputStream getRawStream() {
         if(stream == null)
             try {
-                this.stream = AudioSystem.getAudioInputStream(getUrl());
+                this.stream = AudioSystem.getAudioInputStream(getURL());
             } catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
             } catch (IOException e) {

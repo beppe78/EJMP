@@ -21,12 +21,14 @@ import javax.sound.sampled.AudioSystem;
 import jp.tohhy.ejmp.sounds.spi.SpiSound;
 
 import com.sun.media.sound.AudioSynthesizer;
+import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
 
 public class MIDISound extends SpiSound {
     private AudioInputStream stream;
     private Synthesizer synth;
     private Sequencer sequencer;
+    private URL soundFont;
 
     public MIDISound(String resourcePath) {
         super(resourcePath);
@@ -69,7 +71,7 @@ public class MIDISound extends SpiSound {
                     System.err.println("given synth is not AudioSynthesizer");
                 synth.open();
             }
-            final BufferedInputStream stream = new BufferedInputStream(getUrl().openStream());
+            final BufferedInputStream stream = new BufferedInputStream(getURL().openStream());
             this.sequencer = MidiSystem.getSequencer(false);
             sequencer.setSequence(stream);
             sequencer.getTransmitter().setReceiver(synth.getReceiver());
@@ -105,15 +107,21 @@ public class MIDISound extends SpiSound {
     }
 
     public void dispose() {
-        super.dispose();
-        if(this.synth != null) {
-            this.synth.close();
-            this.synth = null;
-            System.gc();
+        try {
+            super.dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         if(sequencer != null) {
-            sequencer.close();
+            if(sequencer.isOpen())
+                sequencer.close();
             sequencer = null;
+        }
+        if(synth != null) {
+            if(synth.isOpen())
+                synth.close();
+            synth = null;
+            System.gc();
         }
     }
     
@@ -127,17 +135,40 @@ public class MIDISound extends SpiSound {
         return stream;
     }
 
-    public void setSequencer(Sequencer sequencer) {
-        this.sequencer = sequencer;
-    }
-
     public Sequencer getSequencer() {
         return sequencer;
     }
+    
     public Synthesizer getSynth() {
         return synth;
     }
+    
     public void setSynth(Synthesizer synth) {
         this.synth = synth;
+        dispose();
+        init(synth);
+    }
+    
+    public void setSoundFont(URL soundfont) {
+        try {
+            //既存のシンセサイザを削除して新しいシンセサイザを適用しgc
+            reload();
+            if(synth != null && synth.isOpen()) {
+                //SoundBankはsynth, receiverのOpen後に指定する必要がある
+                final SF2Soundbank bank = new SF2Soundbank(soundfont);
+                getSynth().unloadAllInstruments(getSynth().getDefaultSoundbank());
+                getSynth().loadAllInstruments(bank);
+                this.soundFont = soundfont;
+            } else {
+                System.out.println("synth closed");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.soundFont = null;
+    }
+    
+    public URL getSoundFont() {
+        return soundFont;
     }
 }

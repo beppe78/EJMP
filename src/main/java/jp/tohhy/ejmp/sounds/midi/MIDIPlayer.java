@@ -1,7 +1,8 @@
 package jp.tohhy.ejmp.sounds.midi;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.sound.midi.Synthesizer;
 
@@ -9,15 +10,12 @@ import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.sounds.spi.SpiPlayer;
 import jp.tohhy.ejmp.sounds.spi.SpiSound;
 
-import com.sun.media.sound.SF2Soundbank;
-import com.sun.media.sound.SoftSynthesizer;
-
 public class MIDIPlayer extends SpiPlayer {
 
     private MIDISound media;
     
     public MIDIPlayer() {
-        setBufferSize(8192);
+        setBufferSize(10000);
     }
 
     public void setMedia(Media media) {
@@ -41,16 +39,16 @@ public class MIDIPlayer extends SpiPlayer {
      * サウンドフォントを適用する.
      * @param soundfont .sf2形式のファイル
      */
-    public void loadSountFont(File soundfont) {
-        //SoundBankはOpen後に指定する
+    public void setSoundFont(File soundfont) {
         try {
-            media.init(new SoftSynthesizer());
-            final SF2Soundbank bank = new SF2Soundbank(soundfont);
-            media.getSynth().unloadAllInstruments(media.getSynth().getDefaultSoundbank());
-            media.getSynth().loadAllInstruments(bank);
-        } catch (IOException e) {
+            setSoundFont(soundfont.toURI().toURL());
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void setSoundFont(URL soundfont) {
+        media.setSoundFont(soundfont);
     }
 
     /**
@@ -65,10 +63,19 @@ public class MIDIPlayer extends SpiPlayer {
      * getter/setter
      */
     public void setTick(long tick) {
-        media.getSequencer().setTickPosition(tick);
+        if(media != null && media.getSequencer() != null)
+            media.getSequencer().setTickPosition(tick);
     }
 
     public long getTick() {
-        return media.getSequencer().getTickPosition();
+        if(media != null && media.getSequencer() != null)
+            return media.getSequencer().getTickPosition();
+        return 0;
+    }
+    
+    public long getTickLength() {
+        if(media != null && media.getSequencer() != null)
+            return media.getSequencer().getTickLength();
+        return 0;
     }
 }

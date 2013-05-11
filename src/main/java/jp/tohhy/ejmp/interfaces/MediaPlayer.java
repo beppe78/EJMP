@@ -85,5 +85,4 @@ public interface MediaPlayer {
      * @param pan -1.0 (左チャネルのみ) 〜 1.0 (右チャネルのみ)
      */
     public void setPan(double pan);
-
 }

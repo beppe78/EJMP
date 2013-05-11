@@ -36,14 +36,10 @@ public class OggSound extends SpiSound {
     }
     
     @Override
-    public void dispose() {
+    public void dispose() throws IOException {
         super.dispose();
         if(decodedStream != null) {
-            try {
-                decodedStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            decodedStream.close();
         }
         format = null;
         decodedStream = null;

@@ -1,5 +1,6 @@
 package jp.tohhy.ejmp.interfaces;
 
+import java.io.IOException;
 import java.net.URL;
 
 public interface Media {
@@ -27,7 +28,7 @@ public interface Media {
     /**
      * このメディアを破棄する.関連するストリームをすべて閉じるように実装する.
      */
-    public abstract void dispose() throws Exception;
+    public abstract void dispose() throws IOException;
     
     /**
      * このメディアを表現する名前を返す.
@@ -38,9 +39,9 @@ public interface Media {
     public String getName();
     
     /**
-     * このメディアのファイルが存在するURLを返す.
-     * @return このメディアのファイルが存在するURL
+     * このメディアを表現するURLを返す.
+     * @return このメディアのURL
      */
-    public URL getUrl();
+    public URL getURL();
 
 }

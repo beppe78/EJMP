@@ -9,6 +9,7 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+import jp.tohhy.ejmp.exceptions.StreamUnavailableException;
 import jp.tohhy.ejmp.interfaces.AbstractMediaPlayer;
 import jp.tohhy.ejmp.interfaces.Media;
 import jp.tohhy.ejmp.utils.PlayThread;
@@ -25,8 +26,12 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
     
     public abstract SpiSound getSpiSound();
 
-    protected int readStream(SpiSound media, byte[] buffer) throws IOException {
-        return media.getDecodedStream().read(buffer, 0, buffer.length);
+    protected int readStream(SpiSound media, byte[] buffer) throws StreamUnavailableException {
+        try {
+            return media.getDecodedStream().read(buffer, 0, buffer.length);
+        } catch (IOException e) {
+            throw new StreamUnavailableException(e);
+        }
     }
 
     private void createPlayThread(final SpiSound media) {
@@ -130,19 +135,24 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
             final FloatControl volumeControl = 
                     (FloatControl)line.getControl(FloatControl.Type.MASTER_GAIN);
             float value = (float)Math.log10(volume) * 20;
-            volumeControl.setValue(value);
+            if(value < volumeControl.getMaximum() && value > volumeControl.getMinimum())
+                volumeControl.setValue(value);
         }
         this.volume = volume;
     }
     
     public void setPan(double pan) {
         if(line != null && line.isOpen()) {
-            final FloatControl panControl = 
-                    (FloatControl)line.getControl(FloatControl.Type.PAN);
-            float value = (float)pan;
-            if(value > 1.0) value = 1.0f;
-            if(value < -1.0) value = -1.0f;
-            panControl.setValue(value);
+            try {
+                final FloatControl panControl = 
+                        (FloatControl)line.getControl(FloatControl.Type.PAN);
+                float value = (float)pan;
+                if(value > 1.0) value = 1.0f;
+                if(value < -1.0) value = -1.0f;
+                panControl.setValue(value);
+            } catch (IllegalArgumentException e) {
+                System.err.println("EJMP : pan unsupported");
+            }
         }
         this.pan = pan;
     }

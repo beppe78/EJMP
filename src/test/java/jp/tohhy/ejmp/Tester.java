@@ -1,26 +1,69 @@
 package jp.tohhy.ejmp;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import jp.tohhy.ejmp.interfaces.MediaPlayer;
 import jp.tohhy.ejmp.sounds.SoundPlayer;
+import jp.tohhy.ejmp.sounds.midi.MIDIPlayer;
+import jp.tohhy.ejmp.sounds.midi.MIDISound;
 
 public class Tester {
 
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia("resources/test.aiff");
+        player.setMedia("resources/test.wav");
+//        final MIDIPlayer player = new MIDIPlayer();
+//        player.setMedia(new MIDISound("resources/test.mid"));
         
         JFrame frame = new JFrame();
+
+        frame.setBounds(100,100,300,200);
+        Box wrapper = new Box(BoxLayout.Y_AXIS);
+        createComponents(player, wrapper);
+        createSoundPlayerAddons(player, wrapper);
+//        createMidiAddons(player, wrapper);
+        frame.add(wrapper);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private static void createSoundPlayerAddons(final SoundPlayer player, final Box wrapper) {
+        Box buttonsB = new Box(BoxLayout.X_AXIS);
+        buttonsB.add(new JButton(new AbstractAction("fadeIn") {
+            public void actionPerformed(ActionEvent e) {
+                player.fadeIn(500);
+            }
+        }));
+        buttonsB.add(new JButton(new AbstractAction("fadeOut") {
+            public void actionPerformed(ActionEvent e) {
+                player.fade(0.0, 500);
+            }
+        }));
+        buttonsB.add(new JButton(new AbstractAction("stopFade") {
+            public void actionPerformed(ActionEvent e) {
+                player.stopFade();
+            }
+        }));
+
+        wrapper.add(buttonsB);
+    }
+    
+    private static void createComponents(final MediaPlayer player, final Box wrapper) {
         Box buttonsA = new Box(BoxLayout.X_AXIS);
         buttonsA.add(new JButton(new AbstractAction("play") {
             public void actionPerformed(ActionEvent e) {
@@ -37,23 +80,8 @@ public class Tester {
                 player.restart();
             }
         }));
-        Box buttonsB = new Box(BoxLayout.X_AXIS);
-        buttonsB.add(new JButton(new AbstractAction("fadeIn") {
-            public void actionPerformed(ActionEvent e) {
-                player.fadeIn(2000);
-            }
-        }));
-        buttonsB.add(new JButton(new AbstractAction("fadeOut") {
-            public void actionPerformed(ActionEvent e) {
-                player.fadeOut(2000);
-            }
-        }));
-        buttonsB.add(new JButton(new AbstractAction("stopFade") {
-            public void actionPerformed(ActionEvent e) {
-                player.stopFade();
-            }
-        }));
-        buttonsB.add(new JButton(new AbstractAction("rewind") {
+
+        buttonsA.add(new JButton(new AbstractAction("rewind") {
             public void actionPerformed(ActionEvent e) {
                 player.rewind();
             }
@@ -76,16 +104,37 @@ public class Tester {
                 player.setPan((double)pan.getValue()/100);
             }
         });
-        frame.setBounds(100,100,300,200);
-        Box wrapper = new Box(BoxLayout.Y_AXIS);
         wrapper.add(buttonsA);
-        wrapper.add(buttonsB);
         wrapper.add(isLoop);
         wrapper.add(volume);
         wrapper.add(pan);
-        frame.add(wrapper);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private static void createMidiAddons(final MIDIPlayer player, final Box wrapper) {
+        final int resolution = 1000;
+        final JSlider tick = new JSlider(0, resolution, 0);
+        tick.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                player.setTick((player.getTickLength() * tick.getValue())/resolution);
+            }
+        });
+        final JComboBox soundfonts = new JComboBox();
+        ArrayList<File> sflist = new ArrayList<File>();
+        //指定ディレクトリにあるサウンドフォントを全て読み込む
+        for(File f : new File("soundfonts").listFiles()) {
+            if(f.getName().endsWith("sf2")) {
+                sflist.add(f);
+            }
+        }
+        soundfonts.setModel(new DefaultComboBoxModel(sflist.toArray()));
+        soundfonts.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(player.isPlaying()) {player.stop();}
+                player.setSoundFont((File)soundfonts.getSelectedItem());
+            }
+        });
+        wrapper.add(tick);
+        wrapper.add(soundfonts);
     }
 
     public static void main(String[] args) {
