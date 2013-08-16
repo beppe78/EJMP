@@ -2,6 +2,7 @@ package jp.tohhy.ejmp.exceptions;
 
 import java.io.IOException;
 
+
 public class StreamUnavailableException extends IOException {
     private static final long serialVersionUID = 8955031100963834825L;
 

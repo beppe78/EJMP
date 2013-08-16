@@ -1,4 +1,4 @@
-package jp.tohhy.ejmp;
+package jp.tohhy.ejmp.test;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +17,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import jp.tohhy.ejmp.interfaces.MediaPlayer;
 import jp.tohhy.ejmp.sounds.SoundPlayer;
 import jp.tohhy.ejmp.sounds.midi.MIDIPlayer;
-import jp.tohhy.ejmp.sounds.midi.MIDISound;
+import jp.tohhy.ejmp.interfaces.MediaPlayer;
+
 
 public class Tester {
 
