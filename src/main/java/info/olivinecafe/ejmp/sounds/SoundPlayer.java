@@ -3,11 +3,9 @@ package info.olivinecafe.ejmp.sounds;
 import info.olivinecafe.ejmp.interfaces.AbstractMediaPlayer;
 import info.olivinecafe.ejmp.interfaces.Media;
 import info.olivinecafe.ejmp.interfaces.MediaPlayer;
+import info.olivinecafe.ejmp.utils.MediaLocation;
 import info.olivinecafe.ejmp.utils.MediaUtils;
 import info.olivinecafe.ejmp.utils.PlayerUtils;
-
-import java.io.File;
-import java.net.URL;
 
 
 /**
@@ -15,8 +13,9 @@ import java.net.URL;
  * setMediaでファイルやリソースを与えてplay()を呼び出すと、
  * メディアの拡張子から判断してその形式に対し適切なプレイヤーを内部で生成して実行する.
  */
-public class SoundPlayer extends AbstractMediaPlayer<Media> {
-    private MediaPlayer<Media> player;
+@SuppressWarnings("rawtypes")
+public class SoundPlayer extends AbstractMediaPlayer {
+    private MediaPlayer player;
     private double volume = 1.0;
     private double pan = 0.0;
     private boolean isFading = false;
@@ -24,16 +23,8 @@ public class SoundPlayer extends AbstractMediaPlayer<Media> {
 
     public SoundPlayer() {}
 
-    public void setMedia(File file) {
-        setMedia(MediaUtils.createSuitableMedia(file));
-    }
-
-    public void setMedia(String resourcePath) {
-        setMedia(MediaUtils.createSuitableMedia(resourcePath));
-    }
-
-    public void setMedia(URL url) {
-        setMedia(MediaUtils.createSuitableMedia(url));
+    public void setMedia(MediaLocation location) {
+        setMedia(MediaUtils.createSuitableMedia(location));
     }
     
     public void setMedia(Media media) {
@@ -52,6 +43,7 @@ public class SoundPlayer extends AbstractMediaPlayer<Media> {
             player.setLoop(isRepeat);
     }
     
+    @SuppressWarnings("unchecked")
     private void preparePlayer(Media media) {
         if(media == null) {
             System.err.println("preparePlayer: received media is null");

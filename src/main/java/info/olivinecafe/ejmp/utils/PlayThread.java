@@ -1,5 +1,9 @@
 package info.olivinecafe.ejmp.utils;
 
+/**
+ * メディア再生用のスレッド.
+ * @author tohhy
+ */
 public class PlayThread extends Thread {
     private boolean isEnd = false;
     private final Playable p;
@@ -13,10 +17,18 @@ public class PlayThread extends Thread {
         p.play(this);
     }
 
+    /**
+     * 再生が終了したかどうかを設定する.
+     * @param isEnd
+     */
     public void setEnd(boolean isEnd) {
         this.isEnd = isEnd;
     }
 
+    /**
+     * 再生が終了したかどうかを返す.
+     * @return 再生が終了したかどうか
+     */
     public boolean isEnd() {
         return isEnd;
     }

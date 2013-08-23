@@ -15,7 +15,7 @@ defaultTasks 'clean', 'build', 'jar', 'install', 'uploadArchives'
 sourceCompatibility = 1.7
 
 ext {
-    project.version = '0.1.2a'
+    project.version = '0.1.2'
     project.group = 'info.olivinecafe'
     appName = 'ejmp'
     mainClass = 'info.olivinecafe.ejmp.test.Tester'

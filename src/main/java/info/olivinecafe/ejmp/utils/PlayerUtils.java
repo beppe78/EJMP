@@ -21,6 +21,7 @@ public class PlayerUtils {
      * @param arg メディアに与える引数
      * @return 適切なメディア
      */
+    @SuppressWarnings("rawtypes")
     public static MediaPlayer createSuitablePlayer(Media media) {
         if(media != null) {
             try {
@@ -36,11 +37,12 @@ public class PlayerUtils {
     }
 
     /**
-     * メディアから判断して適切なプレイヤークラスを返す.
+     * メディアから適切なプレイヤーを生成して返す.
      * @param ext 拡張子（.を含まない）
      * @return 拡張子に対応したメディアプレイヤークラス
      */
-    public static MediaPlayer getSuitablePlayerInstance(Media media) {
+    @SuppressWarnings("rawtypes")
+    private static MediaPlayer getSuitablePlayerInstance(Media media) {
         if(media instanceof MIDISound) {
             return new MIDIPlayer();
         } else if(media instanceof Mp3Sound) {

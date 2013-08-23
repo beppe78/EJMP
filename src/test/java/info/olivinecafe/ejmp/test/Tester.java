@@ -3,6 +3,7 @@ package info.olivinecafe.ejmp.test;
 import info.olivinecafe.ejmp.interfaces.MediaPlayer;
 import info.olivinecafe.ejmp.sounds.SoundPlayer;
 import info.olivinecafe.ejmp.sounds.midi.MIDIPlayer;
+import info.olivinecafe.ejmp.utils.MediaLocation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,8 +25,8 @@ import javax.swing.event.ChangeListener;
 public class Tester {
     
     public Tester() {
-        final SoundPlayer player = new SoundPlayer();
-        player.setMedia(new File("testresources/test.aiff"));
+        SoundPlayer player = new SoundPlayer();
+        player.setMedia(new MediaLocation(new File("testresources/test.aiff")));
         JFrame frame = new JFrame();
         frame.setBounds(100, 100, 400, 200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);

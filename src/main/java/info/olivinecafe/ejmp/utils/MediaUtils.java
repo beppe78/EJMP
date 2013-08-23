@@ -10,27 +10,18 @@ import info.olivinecafe.ejmp.sounds.spi.Mp3Sound;
 import info.olivinecafe.ejmp.sounds.spi.OggSound;
 import info.olivinecafe.ejmp.sounds.spi.WaveSound;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-
 
 public class MediaUtils {
-
-    public static AbstractMedia createSuitableMedia(String resourcePath) {
-        return createSuitableMedia(FileUtils.getExtension(resourcePath), 
-                new MediaLocation(resourcePath));
-    }
-
-    public static AbstractMedia createSuitableMedia(File file) {
-        return createSuitableMedia(FileUtils.getExtension(file.getName()), 
-                new MediaLocation(file));
-    }
     
-    public static AbstractMedia createSuitableMedia(URL url) {
-        return createSuitableMedia(FileUtils.getExtension(url.getFile()), 
-                new MediaLocation(url));
+    /**
+     * メディアURLの拡張子から判断して適切なメディアを返す.
+     * @param location メディアの位置
+     * @return 拡張子に対応したメディア
+     */
+    public static AbstractMedia createSuitableMedia(MediaLocation location) {
+        return createSuitableMedia(location.getExtension(), location);
     }
 
     /**
@@ -95,5 +86,4 @@ public class MediaUtils {
         }
         return null;
     }
-
 }
