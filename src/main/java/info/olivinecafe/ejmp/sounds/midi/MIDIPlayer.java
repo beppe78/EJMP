@@ -1,8 +1,6 @@
 package info.olivinecafe.ejmp.sounds.midi;
 
-import info.olivinecafe.ejmp.interfaces.Media;
 import info.olivinecafe.ejmp.sounds.spi.SpiPlayer;
-import info.olivinecafe.ejmp.sounds.spi.SpiSound;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -11,23 +9,12 @@ import java.net.URL;
 import javax.sound.midi.Synthesizer;
 
 
-public class MIDIPlayer extends SpiPlayer {
+public class MIDIPlayer extends SpiPlayer<MIDISound> {
 
     private MIDISound media;
     
     public MIDIPlayer() {
         setBufferSize(10000);
-    }
-
-    public void setMedia(Media media) {
-        if(getMedia() != media)
-        if(media instanceof MIDISound)
-            this.media = (MIDISound)media;
-    }
-
-    @Override
-    public SpiSound getSpiSound() {
-        return media;
     }
 
     @Override

@@ -1,6 +1,5 @@
-package info.olivinecafe.ejmp.sounds.ape;
+package info.olivinecafe.ejmp.sounds.spi;
 
-import info.olivinecafe.ejmp.sounds.spi.SpiSound;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,27 +10,27 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
 
-public class ApeSound extends SpiSound {
+public class AiffSound extends SpiSound {
     private AudioInputStream decodedStream;
 
-    public ApeSound(File file) {
+    public AiffSound(File file) {
         super(file);
     }
 
-    public ApeSound(String resourcePath) {
+    public AiffSound(String resourcePath) {
         super(resourcePath);
     }
 
-    public ApeSound(URI uri) {
+    public AiffSound(URI uri) {
         super(uri);
     }
 
-    public ApeSound(URL url) {
+    public AiffSound(URL url) {
         super(url);
     }
     
     public MediaType getMediaType() {
-        return MediaType.APE;
+        return MediaType.AIFF;
     }
     
     @Override

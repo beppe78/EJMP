@@ -2,7 +2,6 @@ package info.olivinecafe.ejmp.sounds.spi;
 
 import info.olivinecafe.ejmp.exceptions.StreamUnavailableException;
 import info.olivinecafe.ejmp.interfaces.AbstractMediaPlayer;
-import info.olivinecafe.ejmp.interfaces.Media;
 import info.olivinecafe.ejmp.utils.PlayThread;
 import info.olivinecafe.ejmp.utils.PlayThread.Playable;
 
@@ -16,17 +15,17 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 
-public abstract class SpiPlayer extends AbstractMediaPlayer {
+public class SpiPlayer<SoundClass extends SpiSound> extends AbstractMediaPlayer<SoundClass> {
     private SourceDataLine line;
     private boolean isPlaying = false;
     private double volume = 1.0;
     private double pan = 0.0;
     private PlayThread playThread;
     private int bufferSize = 20480;
+    private SoundClass media;
     protected byte[] buffer = new byte[getBufferSize()];
     
-    public abstract SpiSound getSpiSound();
-
+    
     protected int readStream(SpiSound media, byte[] buffer) throws StreamUnavailableException {
         try {
             return media.getDecodedStream().read(buffer, 0, buffer.length);
@@ -110,7 +109,7 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
 
     public void play() {
         if(getMedia() != null && !isPlaying()) {
-            createPlayThread(getSpiSound());
+            createPlayThread(getMedia());
             startThread();
         }
     }
@@ -170,8 +169,15 @@ public abstract class SpiPlayer extends AbstractMediaPlayer {
         return pan;
     }
 
-    public Media getMedia() {
-        return getSpiSound();
+    public SoundClass getMedia() {
+        return media;
+    }
+
+    public void setMedia(SoundClass media) {
+        if(getMedia() != media) {
+            this.media = media;
+            rewind();
+        }
     }
 
     public int getBufferSize() {

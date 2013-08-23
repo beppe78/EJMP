@@ -91,4 +91,12 @@ public abstract class AbstractMedia implements Media {
     public String toString() {
         return getName();
     }
+
+    public ZipFile getZip() {
+        return zip;
+    }
+
+    public ZipEntry getEntry() {
+        return entry;
+    }
 }

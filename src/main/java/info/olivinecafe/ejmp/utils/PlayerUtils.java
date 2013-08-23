@@ -2,21 +2,15 @@ package info.olivinecafe.ejmp.utils;
 
 import info.olivinecafe.ejmp.interfaces.Media;
 import info.olivinecafe.ejmp.interfaces.MediaPlayer;
-import info.olivinecafe.ejmp.sounds.aiff.AiffPlayer;
-import info.olivinecafe.ejmp.sounds.aiff.AiffSound;
-import info.olivinecafe.ejmp.sounds.ape.ApePlayer;
-import info.olivinecafe.ejmp.sounds.ape.ApeSound;
-import info.olivinecafe.ejmp.sounds.au.AUPlayer;
-import info.olivinecafe.ejmp.sounds.au.AUSound;
-import info.olivinecafe.ejmp.sounds.flac.FlacPlayer;
-import info.olivinecafe.ejmp.sounds.flac.FlacSound;
 import info.olivinecafe.ejmp.sounds.midi.MIDIPlayer;
 import info.olivinecafe.ejmp.sounds.midi.MIDISound;
-import info.olivinecafe.ejmp.sounds.mp3.Mp3Player;
-import info.olivinecafe.ejmp.sounds.mp3.Mp3Sound;
-import info.olivinecafe.ejmp.sounds.ogg.OggPlayer;
-import info.olivinecafe.ejmp.sounds.ogg.OggSound;
-import info.olivinecafe.ejmp.sounds.wave.WavePlayer;
+import info.olivinecafe.ejmp.sounds.spi.AUSound;
+import info.olivinecafe.ejmp.sounds.spi.AiffSound;
+import info.olivinecafe.ejmp.sounds.spi.ApeSound;
+import info.olivinecafe.ejmp.sounds.spi.FlacSound;
+import info.olivinecafe.ejmp.sounds.spi.Mp3Sound;
+import info.olivinecafe.ejmp.sounds.spi.OggSound;
+import info.olivinecafe.ejmp.sounds.spi.SpiPlayer;
 import info.olivinecafe.ejmp.sounds.wave.WaveSound;
 
 public class PlayerUtils {
@@ -30,14 +24,10 @@ public class PlayerUtils {
     public static MediaPlayer createSuitablePlayer(Media media) {
         if(media != null) {
             try {
-                return getSuitablePlayerClass(media).newInstance();
+                return getSuitablePlayerInstance(media);
             } catch (SecurityException e) {
                 e.printStackTrace();
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -50,25 +40,25 @@ public class PlayerUtils {
      * @param ext 拡張子（.を含まない）
      * @return 拡張子に対応したメディアプレイヤークラス
      */
-    public static Class<? extends MediaPlayer> getSuitablePlayerClass(Media media) {
+    public static MediaPlayer getSuitablePlayerInstance(Media media) {
         if(media instanceof MIDISound) {
-            return MIDIPlayer.class;
+            return new MIDIPlayer();
         } else if(media instanceof Mp3Sound) {
-            return Mp3Player.class;
+            return new SpiPlayer<Mp3Sound>();
         } else if(media instanceof WaveSound) {
-            return WavePlayer.class;
+            return new SpiPlayer<WaveSound>();
 //        } else if(media instanceof AACSound) {
-//            return AACPlayer.class;
+//            return new SpiPlayer<AACSound>();
         } else if(media instanceof AUSound) {
-            return AUPlayer.class;
+            return new SpiPlayer<AUSound>();
         } else if(media instanceof OggSound) {
-            return OggPlayer.class;
+            return new SpiPlayer<OggSound>();
         } else if(media instanceof AiffSound) {
-            return AiffPlayer.class;
+            return new SpiPlayer<AiffSound>();
         } else if(media instanceof FlacSound) {
-            return FlacPlayer.class;
+            return new SpiPlayer<FlacSound>();
         } else if(media instanceof ApeSound) {
-            return ApePlayer.class;
+            return new SpiPlayer<ApeSound>();
         }
         return null;
     }

@@ -6,19 +6,19 @@ package info.olivinecafe.ejmp.interfaces;
  * プレイヤーは適宜スレッドを用いてブロックせずに再生処理を行えるようにする.
  * @author tohhy
  */
-public interface MediaPlayer {
+public interface MediaPlayer<T extends Media> {
 
     /**
      * 再生するメディアをセットする.
      * @param file 再生するメディア
      */
-    public void setMedia(Media media);
+    public void setMedia(T media);
 
     /**
      * 再生中のメディアを取得する.
      * @return file 再生するメディアが保存されたファイル
      */
-    public Media getMedia();
+    public T getMedia();
 
     /**
      * メディアを再生する.

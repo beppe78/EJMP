@@ -1,13 +1,13 @@
 package info.olivinecafe.ejmp.utils;
 
 import info.olivinecafe.ejmp.interfaces.AbstractMedia;
-import info.olivinecafe.ejmp.sounds.aiff.AiffSound;
-import info.olivinecafe.ejmp.sounds.ape.ApeSound;
-import info.olivinecafe.ejmp.sounds.au.AUSound;
-import info.olivinecafe.ejmp.sounds.flac.FlacSound;
 import info.olivinecafe.ejmp.sounds.midi.MIDISound;
-import info.olivinecafe.ejmp.sounds.mp3.Mp3Sound;
-import info.olivinecafe.ejmp.sounds.ogg.OggSound;
+import info.olivinecafe.ejmp.sounds.spi.AUSound;
+import info.olivinecafe.ejmp.sounds.spi.AiffSound;
+import info.olivinecafe.ejmp.sounds.spi.ApeSound;
+import info.olivinecafe.ejmp.sounds.spi.FlacSound;
+import info.olivinecafe.ejmp.sounds.spi.Mp3Sound;
+import info.olivinecafe.ejmp.sounds.spi.OggSound;
 import info.olivinecafe.ejmp.sounds.wave.WaveSound;
 
 import java.io.File;

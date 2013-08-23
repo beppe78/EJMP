@@ -1,7 +1,7 @@
 package info.olivinecafe.ejmp.interfaces;
 
 
-public abstract class AbstractMediaPlayer implements MediaPlayer {
+public abstract class AbstractMediaPlayer<T extends Media> implements MediaPlayer<T> {
     private boolean isLoop = false;
 
     public void restart() {

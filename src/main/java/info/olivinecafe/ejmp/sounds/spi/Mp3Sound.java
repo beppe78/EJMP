@@ -1,6 +1,5 @@
-package info.olivinecafe.ejmp.sounds.mp3;
+package info.olivinecafe.ejmp.sounds.spi;
 
-import info.olivinecafe.ejmp.sounds.spi.SpiSound;
 
 import java.io.File;
 import java.io.IOException;

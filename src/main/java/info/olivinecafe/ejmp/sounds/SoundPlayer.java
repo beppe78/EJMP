@@ -15,8 +15,8 @@ import java.net.URL;
  * setMediaでファイルやリソースを与えてplay()を呼び出すと、
  * メディアの拡張子から判断してその形式に対し適切なプレイヤーを内部で生成して実行する.
  */
-public class SoundPlayer extends AbstractMediaPlayer {
-    private MediaPlayer player;
+public class SoundPlayer extends AbstractMediaPlayer<Media> {
+    private MediaPlayer<Media> player;
     private double volume = 1.0;
     private double pan = 0.0;
     private boolean isFading = false;
@@ -57,7 +57,7 @@ public class SoundPlayer extends AbstractMediaPlayer {
             System.err.println("preparePlayer: received media is null");
             return;
         }
-        if(player == null || player.getClass() != PlayerUtils.getSuitablePlayerClass(media)) {
+        if(player == null) {
             if(player != null) player.stop();
             player = PlayerUtils.createSuitablePlayer(media);
         }
