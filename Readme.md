@@ -7,10 +7,10 @@ Java上で様々な形式のサウンドファイルを再生できるPure Java�
 使い方
 ---------------------------------
 
-  SoundPlayer player = new SoundPlayer();
-  MediaLocation location = new MediaLocation(new File("test.aiff"));
-  player.setMedia(location);
-  player.play();
+    SoundPlayer player = new SoundPlayer();
+    MediaLocation location = new MediaLocation(new File("test.aiff"));
+    player.setMedia(location);
+    player.play();
 
 
 現在の対応形式

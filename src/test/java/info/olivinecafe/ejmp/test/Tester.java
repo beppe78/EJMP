@@ -32,7 +32,6 @@ public class Tester {
         Box wrapper = new Box(BoxLayout.Y_AXIS);
         createComponents(player, wrapper);
         createSoundPlayerAddons(player, wrapper);
-//        createMidiAddons(player, wrapper);
         frame.add(wrapper);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
