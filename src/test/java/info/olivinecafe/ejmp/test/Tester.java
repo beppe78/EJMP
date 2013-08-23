@@ -25,12 +25,9 @@ public class Tester {
     
     public Tester() {
         final SoundPlayer player = new SoundPlayer();
-        player.setMedia(new File("testresources/test.raw"));
-//        final MIDIPlayer player = new MIDIPlayer();
-//        player.setMedia(new MIDISound(new File("testresources/test.mp3")));
-        
+        player.setMedia(new File("testresources/test.flac"));
         JFrame frame = new JFrame();
-        frame.setBounds(100,100,300,200);
+        frame.setBounds(100, 100, 400, 200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);
         createComponents(player, wrapper);
         createSoundPlayerAddons(player, wrapper);

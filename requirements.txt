@@ -4,10 +4,16 @@ none
  - mp3
  jlayer-1.0.1-1.jar
  mp3spi-1.9.5-1.jar
- 
+ tritonus_share.jar
+
  - ogg
  vorbisspi1.0.3.jar
  jorbis-0.0.15.jar
  tritonus_jorbis.jar
- tritonus_share.jar
- jogg-0.0.7.jar
+ tritonus_share.jar（maven等で取得できるtritonus-share-0.3.7-1.jarでは動作しません）
+
+ - aac
+ jaad-0.8.4.jar
+
+mp3と併用する場合、jaadが読み込まれるのはmp3より後になるようにしてください。
+http://stackoverflow.com/questions/17823542/conflicting-jar-methods

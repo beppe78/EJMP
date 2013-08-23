@@ -39,11 +39,6 @@ public abstract class SpiSound extends AbstractMedia {
         super(url);
     }
     
-    private void init() {
-        getDecodedStream();
-        getFileFormat();
-    }
-    
     public void reload() {
         try {
             dispose();
@@ -64,7 +59,7 @@ public abstract class SpiSound extends AbstractMedia {
     public AudioFileFormat getFileFormat() {
         if(fileFormat == null)
             try {
-                this.fileFormat = AudioSystem.getAudioFileFormat(getURL());
+                this.fileFormat = getFormatFromURL(getURL());
             } catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -74,11 +69,18 @@ public abstract class SpiSound extends AbstractMedia {
     }
     
     public AudioFormat getFormat() {
-        if(format == null)
-            return getFileFormat().getFormat();
+        if(format == null) {
+            AudioFileFormat aff = getFileFormat();
+            if(aff != null) return aff.getFormat();
+        }
         return format;
     }
     
+    protected void init() {
+        getDecodedStream();
+        getFileFormat();
+    }
+
     protected AudioInputStream getRawStream() {
         if(stream == null)
             try {
@@ -91,6 +93,11 @@ public abstract class SpiSound extends AbstractMedia {
         return stream;
     }
     
+    protected AudioFileFormat getFormatFromURL(URL url) 
+            throws UnsupportedAudioFileException, IOException {
+        return AudioSystem.getAudioFileFormat(url);
+    }
+
     public AudioInputStream getDecodedStream() {
         return getRawStream();
     }

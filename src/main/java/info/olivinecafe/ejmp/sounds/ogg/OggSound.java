@@ -48,7 +48,7 @@ public class OggSound extends SpiSound {
     
     public AudioFormat getFormat() {
         if(this.format == null) {
-            final AudioFormat baseFormat = getFileFormat().getFormat();
+            AudioFormat baseFormat = getFileFormat().getFormat();
             int nSampleSizeInBits = baseFormat.getSampleSizeInBits();
             if (nSampleSizeInBits <= 0) nSampleSizeInBits = 16;
             if ((baseFormat.getEncoding() == AudioFormat.Encoding.ULAW) || 

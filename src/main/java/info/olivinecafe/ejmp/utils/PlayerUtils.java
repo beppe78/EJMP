@@ -8,6 +8,8 @@ import info.olivinecafe.ejmp.sounds.ape.ApePlayer;
 import info.olivinecafe.ejmp.sounds.ape.ApeSound;
 import info.olivinecafe.ejmp.sounds.au.AUPlayer;
 import info.olivinecafe.ejmp.sounds.au.AUSound;
+import info.olivinecafe.ejmp.sounds.flac.FlacPlayer;
+import info.olivinecafe.ejmp.sounds.flac.FlacSound;
 import info.olivinecafe.ejmp.sounds.midi.MIDIPlayer;
 import info.olivinecafe.ejmp.sounds.midi.MIDISound;
 import info.olivinecafe.ejmp.sounds.mp3.Mp3Player;
@@ -55,12 +57,16 @@ public class PlayerUtils {
             return Mp3Player.class;
         } else if(media instanceof WaveSound) {
             return WavePlayer.class;
+//        } else if(media instanceof AACSound) {
+//            return AACPlayer.class;
         } else if(media instanceof AUSound) {
             return AUPlayer.class;
         } else if(media instanceof OggSound) {
             return OggPlayer.class;
         } else if(media instanceof AiffSound) {
             return AiffPlayer.class;
+        } else if(media instanceof FlacSound) {
+            return FlacPlayer.class;
         } else if(media instanceof ApeSound) {
             return ApePlayer.class;
         }

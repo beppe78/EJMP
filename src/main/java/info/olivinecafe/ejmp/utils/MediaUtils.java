@@ -4,6 +4,7 @@ import info.olivinecafe.ejmp.interfaces.AbstractMedia;
 import info.olivinecafe.ejmp.sounds.aiff.AiffSound;
 import info.olivinecafe.ejmp.sounds.ape.ApeSound;
 import info.olivinecafe.ejmp.sounds.au.AUSound;
+import info.olivinecafe.ejmp.sounds.flac.FlacSound;
 import info.olivinecafe.ejmp.sounds.midi.MIDISound;
 import info.olivinecafe.ejmp.sounds.mp3.Mp3Sound;
 import info.olivinecafe.ejmp.sounds.ogg.OggSound;
@@ -44,11 +45,14 @@ public class MediaUtils {
             return Mp3Sound.class;
         } else if(ext.equals("wma")) {
             //未対応
+        } else if(ext.equals("flac")) {
+            return FlacSound.class;
         } else if(ext.equals("au")) {
             return AUSound.class;
         } else if(ext.equals("ogg") || ext.equals("ogx") || ext.equals("oga")) {
             return OggSound.class;
         } else if(ext.equals("aac") || ext.equals("mp4") || ext.equals("m4a") || ext.equals("m4r")) {
+//            return AACSound.class;
             //未対応
         } else if(ext.equals("mid") || ext.equals("midi")) {
             return MIDISound.class;
