@@ -1,10 +1,9 @@
 package info.olivinecafe.ejmp.sounds.spi;
 
 
-import java.io.File;
+import info.olivinecafe.ejmp.utils.MediaLocation;
+
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -15,20 +14,8 @@ public class AUSound extends SpiSound {
     private AudioFormat format;
     private AudioInputStream decodedStream;
 
-    public AUSound(File file) {
-        super(file);
-    }
-
-    public AUSound(String resourcePath) {
-        super(resourcePath);
-    }
-
-    public AUSound(URI uri) {
-        super(uri);
-    }
-
-    public AUSound(URL url) {
-        super(url);
+    public AUSound(MediaLocation location) {
+        super(location);
     }
     
     public MediaType getMediaType() {

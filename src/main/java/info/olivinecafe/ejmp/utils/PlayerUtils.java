@@ -11,7 +11,7 @@ import info.olivinecafe.ejmp.sounds.spi.FlacSound;
 import info.olivinecafe.ejmp.sounds.spi.Mp3Sound;
 import info.olivinecafe.ejmp.sounds.spi.OggSound;
 import info.olivinecafe.ejmp.sounds.spi.SpiPlayer;
-import info.olivinecafe.ejmp.sounds.wave.WaveSound;
+import info.olivinecafe.ejmp.sounds.spi.WaveSound;
 
 public class PlayerUtils {
 

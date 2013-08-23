@@ -1,11 +1,10 @@
 package info.olivinecafe.ejmp.sounds.midi;
 
 import info.olivinecafe.ejmp.sounds.spi.SpiSound;
+import info.olivinecafe.ejmp.utils.MediaLocation;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -20,7 +19,6 @@ import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
-
 import com.sun.media.sound.AudioSynthesizer;
 import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
@@ -31,23 +29,8 @@ public class MIDISound extends SpiSound {
     private Sequencer sequencer;
     private URL soundFont;
 
-    public MIDISound(String resourcePath) {
-        super(resourcePath);
-        init(new SoftSynthesizer());
-    }
-    public MIDISound(File file) {
-        super(file);
-        init(new SoftSynthesizer());
-    }
-    
-    public MIDISound(URL url) {
-        super(url);
-        init(new SoftSynthesizer());
-    }
-    
-    public MIDISound(URI uri) {
-        super(uri);
-        init(new SoftSynthesizer());
+    public MIDISound(MediaLocation location) {
+        super(location);
     }
     
     /**

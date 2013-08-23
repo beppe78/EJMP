@@ -1,9 +1,9 @@
 package info.olivinecafe.ejmp.sounds.spi;
 
 
-import java.io.File;
+import info.olivinecafe.ejmp.utils.MediaLocation;
+
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -20,20 +20,8 @@ public class FlacSound extends SpiSound {
     private AudioInputStream decodedStream;
     private FLACDecoder decoder;
 
-    public FlacSound(File file) {
-        super(file);
-    }
-
-    public FlacSound(String resourcePath) {
-        super(resourcePath);
-    }
-
-    public FlacSound(URI uri) {
-        super(uri);
-    }
-
-    public FlacSound(URL url) {
-        super(url);
+    public FlacSound(MediaLocation location) {
+        super(location);
     }
     
     @Override

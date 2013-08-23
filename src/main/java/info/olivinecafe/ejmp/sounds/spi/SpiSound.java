@@ -1,10 +1,9 @@
 package info.olivinecafe.ejmp.sounds.spi;
 
 import info.olivinecafe.ejmp.interfaces.AbstractMedia;
+import info.olivinecafe.ejmp.utils.MediaLocation;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -23,20 +22,8 @@ public abstract class SpiSound extends AbstractMedia {
         init();
     }
 
-    public SpiSound(File file) {
-        super(file);
-    }
-
-    public SpiSound(String resourcePath) {
-        super(resourcePath);
-    }
-
-    public SpiSound(URI uri) {
-        super(uri);
-    }
-
-    public SpiSound(URL url) {
-        super(url);
+    public SpiSound(MediaLocation location) {
+        super(location);
     }
     
     public void reload() {

@@ -1,10 +1,9 @@
 package info.olivinecafe.ejmp.sounds.spi;
 
 
-import java.io.File;
+import info.olivinecafe.ejmp.utils.MediaLocation;
+
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -15,20 +14,8 @@ public class OggSound extends SpiSound {
     private AudioFormat format;
     private AudioInputStream decodedStream;
 
-    public OggSound(File file) {
-        super(file);
-    }
-    
-    public OggSound(String resourcePath) {
-        super(resourcePath);
-    }
-    
-    public OggSound(URL url) {
-        super(url);
-    }
-    
-    public OggSound(URI uri) {
-        super(uri);
+    public OggSound(MediaLocation location) {
+        super(location);
     }
 
     public MediaType getMediaType() {

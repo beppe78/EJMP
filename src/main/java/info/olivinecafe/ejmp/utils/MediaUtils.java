@@ -8,7 +8,7 @@ import info.olivinecafe.ejmp.sounds.spi.ApeSound;
 import info.olivinecafe.ejmp.sounds.spi.FlacSound;
 import info.olivinecafe.ejmp.sounds.spi.Mp3Sound;
 import info.olivinecafe.ejmp.sounds.spi.OggSound;
-import info.olivinecafe.ejmp.sounds.wave.WaveSound;
+import info.olivinecafe.ejmp.sounds.spi.WaveSound;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -19,15 +19,18 @@ import java.net.URL;
 public class MediaUtils {
 
     public static AbstractMedia createSuitableMedia(String resourcePath) {
-        return createSuitableMedia(FileUtils.getExtension(resourcePath), resourcePath);
+        return createSuitableMedia(FileUtils.getExtension(resourcePath), 
+                new MediaLocation(resourcePath));
     }
 
     public static AbstractMedia createSuitableMedia(File file) {
-        return createSuitableMedia(FileUtils.getExtension(file.getName()), file);
+        return createSuitableMedia(FileUtils.getExtension(file.getName()), 
+                new MediaLocation(file));
     }
     
     public static AbstractMedia createSuitableMedia(URL url) {
-        return createSuitableMedia(FileUtils.getExtension(url.getFile()), url);
+        return createSuitableMedia(FileUtils.getExtension(url.getFile()), 
+                new MediaLocation(url));
     }
 
     /**
