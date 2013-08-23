@@ -26,7 +26,7 @@ public class Tester {
     
     public Tester() {
         SoundPlayer player = new SoundPlayer();
-        player.setMedia(new MediaLocation(new File("testresources/test.aiff")));
+        player.setMedia(new MediaLocation(new File("testresources/test.flac")));
         JFrame frame = new JFrame();
         frame.setBounds(100, 100, 400, 200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);

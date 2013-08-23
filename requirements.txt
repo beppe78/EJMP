@@ -1,19 +1,39 @@
- - wave, au
+wave, au, aiff
+------------------------------------
+
 none
 
- - mp3
- jlayer-1.0.1-1.jar
- mp3spi-1.9.5-1.jar
- tritonus_share.jar
 
- - ogg
- vorbisspi1.0.3.jar
- jorbis-0.0.15.jar
- tritonus_jorbis.jar
- tritonus_share.jar（maven等で取得できるtritonus-share-0.3.7-1.jarでは動作しません）
+mp3
+------------------------------------
 
- - aac
- jaad-0.8.4.jar
+ - jlayer-1.0.1-1.jar
+   http://search.maven.org/#artifactdetails%7Ccom.googlecode.soundlibs%7Cjlayer%7C1.0.1-1%7Cjar
 
-mp3と併用する場合、jaadが読み込まれるのはmp3より後になるようにしてください。
-http://stackoverflow.com/questions/17823542/conflicting-jar-methods
+ - mp3spi-1.9.5-1.jar
+   http://search.maven.org/#artifactdetails%7Ccom.googlecode.soundlibs%7Cmp3spi%7C1.9.5-1%7Cjar
+
+ - tritonus_share-0.3.7-2.jar
+   http://search.maven.org/#artifactdetails%7Ccom.googlecode.soundlibs%7Ctritonus-share%7C0.3.7-2%7Cjar
+
+
+ogg
+------------------------------------
+
+ - jorbis-0.0.17-2.jar
+   http://search.maven.org/#artifactdetails%7Ccom.googlecode.soundlibs%7Cjorbis%7C0.0.17-2%7Cjar
+
+ - tritonus_jorbis-0.3.6.jar
+   http://www.tritonus.org/plugins.html
+
+ - tritonus_share-0.3.7-2.jar
+   http://search.maven.org/#artifactdetails%7Ccom.googlecode.soundlibs%7Ctritonus-share%7C0.3.7-2%7Cjar
+
+
+flac
+-------------------------------------
+
+ - jflac-1.3.jar
+   http://sourceforge.net/projects/jflac/files/jflac/jflac-1.3/
+
+
