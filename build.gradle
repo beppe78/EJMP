@@ -1,0 +1,58 @@
+// plugins
+apply plugin: 'java'
+apply plugin: 'maven'
+
+// encoding
+def defaultEncoding = 'UTF-8'
+tasks.withType(AbstractCompile) each { it.options.encoding = defaultEncoding }
+tasks.withType(GroovyCompile) each { it.groovyOptions.encoding = defaultEncoding }
+
+// defaulttasks
+defaultTasks 'clean', 'build'
+defaultTasks 'clean', 'build', 'jar', 'install', 'uploadArchives'
+
+sourceCompatibility = 1.7
+
+ext {
+    project.version = '0.1.1a'
+    project.group = 'info.olivinecafe'
+    appName = 'ejmp'
+    mainClass = 'info.olivinecafe.ejmp.test.Tester'
+}
+
+task runMain(dependsOn: classes, type: JavaExec) {
+    main = 'info.olivinecafe.ejmp.test.Tester'
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.compile
+}
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    flatDir { dirs 'lib' }
+}
+
+dependencies {
+    compile group: 'com.googlecode.soundlibs', name: 'mp3spi', version: '1.9.5-1'
+    compile group: 'javax.media', name: 'jmf', version: '2.1.1e'
+    compile group: 'org.jcraft', name: 'jorbis', version: '0.0.17'
+    compile group: 'org.jogamp.joal', name: 'joal', version: '2.0-rc11'
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: m2Repository)
+            pom.version = project.version
+            pom.groupId = project.group
+            pom.artifactId = appName
+        }
+    }
+}
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+manifest.mainAttributes("Main-Class" : mainClass)
