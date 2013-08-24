@@ -18,10 +18,26 @@ public class RawDelayFilter extends SoundFilter {
      */
     protected double b = 1.0;
     
-    private int delayPos = 0;
+    /**
+     * ディレイの長さ（サンプル数）
+     */
     private final int delayLength;
+    
+    /**
+     * ディレイログを格納する配列
+     */
     private final short[] delayBuffer;
     
+    /**
+     * ディレイログの現在の参照位置
+     */
+    private int delayPos = 0;
+    
+    /**
+     * サウンドにディレイをかけるフィルタから音割れ防止の補正を除いたもの.
+     * @param delayLength ディレイの長さ（サンプル数）
+     * @param feedBackGain フィードバックの強さ
+     */
     public RawDelayFilter(int delayLength, double feedBackGain) {
         this.delayLength = delayLength;
         this.delayBuffer = new short[delayLength];
@@ -42,11 +58,21 @@ public class RawDelayFilter extends SoundFilter {
         }
     }
 
+    /**
+     * フィードバックゲインを取得する.
+     * 過去のサウンドがこの倍率をかけられて現在のサウンドに加算される.
+     * @return フィードバックゲイン
+     */
     public double getFeedBackGain() {
         return a;
     }
 
-    public void setFeedBackGain(double a) {
-        this.a = a;
+    /**
+     * フィードバックゲインを指定する.
+     * 過去のサウンドがこの倍率をかけられて現在のサウンドに加算される.
+     * @param feedBackGain フィードバックゲイン
+     */
+    public void setFeedBackGain(double feedBackGain) {
+        this.a = feedBackGain;
     }
 }

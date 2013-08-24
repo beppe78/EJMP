@@ -74,7 +74,7 @@ public class MediaLocation {
     }
     
     /**
-     * メディアのファイル名を取得する.
+     * メディアのファイル名を取得する.getURL().getFile()と同じ.
      * @return メディアのファイル名
      */
     public String getName() {

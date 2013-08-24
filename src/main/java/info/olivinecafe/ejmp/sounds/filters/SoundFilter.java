@@ -2,6 +2,10 @@ package info.olivinecafe.ejmp.sounds.filters;
 
 import javax.sound.sampled.AudioFormat;
 
+/**
+ * サウンドにかけるフィルタの基底クラス.
+ * @author tohhy
+ */
 public abstract class SoundFilter {
     
     /**
@@ -9,12 +13,14 @@ public abstract class SoundFilter {
      * @param rawData サウンドを表すバイトデータの配列
      * @param offset 開始オフセット、省略すると0
      * @param length 配列の長さ、省略するとstream.length
+     * @param format サウンドの形式
      */
     public abstract void filter(byte[] rawData, int offset, int length, AudioFormat format);
     
     /**
      * サウンドを表すバイトデータをフィルタリングする.
      * @param rawData サウンドを表すバイトデータの配列
+     * @param format サウンドの形式
      */
     public void filter(byte[] rawData, AudioFormat format) {
         filter(rawData, 0, rawData.length, format);

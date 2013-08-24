@@ -3,7 +3,6 @@ package info.olivinecafe.ejmp.test;
 import info.olivinecafe.ejmp.media.MediaPlayer;
 import info.olivinecafe.ejmp.sounds.SoundPlayer;
 import info.olivinecafe.ejmp.sounds.filters.DelayFilter;
-import info.olivinecafe.ejmp.sounds.filters.SoundFilter;
 import info.olivinecafe.ejmp.sounds.midi.MIDIPlayer;
 import info.olivinecafe.ejmp.utils.MediaLocation;
 
