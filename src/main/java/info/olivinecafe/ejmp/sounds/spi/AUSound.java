@@ -5,13 +5,10 @@ import info.olivinecafe.ejmp.utils.MediaLocation;
 
 import java.io.IOException;
 
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
-
 public class AUSound extends SpiSound {
-    private AudioFormat format;
     private AudioInputStream decodedStream;
 
     public AUSound(MediaLocation location) {
@@ -20,22 +17,6 @@ public class AUSound extends SpiSound {
     
     public MediaType getMediaType() {
         return MediaType.AU;
-    }
-    
-    @Override
-    public AudioFormat getFormat() {
-        if(this.format == null) {
-            final AudioFormat baseFormat = getFileFormat().getFormat();
-            this.format = new AudioFormat(
-                    AudioFormat.Encoding.PCM_SIGNED,
-                    baseFormat.getSampleRate(),
-                    baseFormat.getSampleSizeInBits() * 2,
-                    baseFormat.getChannels(),
-                    baseFormat.getFrameSize() * 2,
-                    baseFormat.getFrameRate(),
-                    true);
-        }
-        return this.format;
     }
     
     @Override
