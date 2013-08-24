@@ -1,5 +1,7 @@
 package info.olivinecafe.ejmp.sounds.filters;
 
+import javax.sound.sampled.AudioFormat;
+
 /**
  * 音割れの防止機構を含まない生のディレイフィルタ.
  * @author tohhy
@@ -27,12 +29,12 @@ public class RawDelayFilter extends SoundFilter {
     }
     
     @Override
-    public void filter(byte[] stream, int offset, int length) {
+    public void filter(byte[] stream, int offset, int length, AudioFormat format) {
         for(int i=offset; i<offset + length; i+=2) {
-            short oldSample = getSample(stream, i);
+            short oldSample = getSample(stream, i, format.isBigEndian());
             int filtered = (int) (oldSample + (a * delayBuffer[delayPos]));
             short newSample = (short)(filtered * b);
-            setSample(stream, i, newSample);
+            setSample(stream, i, newSample, format.isBigEndian());
             delayBuffer[delayPos] = newSample;
             delayPos++;
             if(delayPos == delayLength)

@@ -10,7 +10,6 @@ import info.olivinecafe.ejmp.sounds.spi.SpiSound;
 public abstract class AbstractSoundPlayer<SoundClass extends SpiSound> 
     extends AbstractMediaPlayer<SoundClass> {
     
-
     private final List<SoundFilter> filters = new ArrayList<>();
     
     /**

@@ -1,6 +1,5 @@
 package info.olivinecafe.ejmp.sounds.spi;
 
-
 import info.olivinecafe.ejmp.utils.MediaLocation;
 
 import java.io.IOException;

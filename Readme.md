@@ -16,7 +16,7 @@ Java上で様々な形式のサウンドファイルを再生できるPure Java�
 現在の対応形式
 ---------------------------------
 
-wav, mp3, ogg, flac, aiff
+wav, mp3, ogg, flac, aiff, au
 
 mp3, ogg, flacは別途ライブラリを入手し、クラスパス上に置く必要があります。  
 詳しくはrequirements.txtを参照してください。

@@ -30,7 +30,7 @@ public class Tester {
     
     public Tester() {
         player.getFilters().add(delayFilter);
-        player.setMedia(new MediaLocation(new File("testresources/test.ogg")));
+        player.setMedia(new MediaLocation(new File("testresources/test.aiff")));
         JFrame frame = new JFrame();
         frame.setBounds(100, 100, 400, 200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);

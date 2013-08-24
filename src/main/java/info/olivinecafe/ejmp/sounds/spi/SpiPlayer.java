@@ -31,7 +31,7 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer<
             int bytesRead = media.getDecodedStream().read(buffer, 0, buffer.length);
             if(bytesRead > 0)
                 for(SoundFilter filter : getFilters())
-                    filter.filter(buffer, 0, bytesRead);
+                    filter.filter(buffer, 0, bytesRead, media.getFormat());
             return bytesRead;
         } catch (IOException e) {
             throw new StreamUnavailableException(e);
