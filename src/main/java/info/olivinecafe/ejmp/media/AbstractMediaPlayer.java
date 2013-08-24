@@ -1,5 +1,4 @@
-package info.olivinecafe.ejmp.interfaces;
-
+package info.olivinecafe.ejmp.media;
 
 public abstract class AbstractMediaPlayer<T extends Media> implements MediaPlayer<T> {
     private boolean isLoop = false;
@@ -17,5 +16,4 @@ public abstract class AbstractMediaPlayer<T extends Media> implements MediaPlaye
     public void setLoop(boolean isLoop) {
         this.isLoop = isLoop;
     }
-
 }

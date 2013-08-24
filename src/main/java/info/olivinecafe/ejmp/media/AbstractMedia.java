@@ -1,4 +1,4 @@
-package info.olivinecafe.ejmp.interfaces;
+package info.olivinecafe.ejmp.media;
 
 import info.olivinecafe.ejmp.utils.MediaLocation;
 

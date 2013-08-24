@@ -1,7 +1,9 @@
 package info.olivinecafe.ejmp.test;
 
-import info.olivinecafe.ejmp.interfaces.MediaPlayer;
+import info.olivinecafe.ejmp.media.MediaPlayer;
 import info.olivinecafe.ejmp.sounds.SoundPlayer;
+import info.olivinecafe.ejmp.sounds.filters.DelayFilter;
+import info.olivinecafe.ejmp.sounds.filters.SoundFilter;
 import info.olivinecafe.ejmp.sounds.midi.MIDIPlayer;
 import info.olivinecafe.ejmp.utils.MediaLocation;
 
@@ -26,7 +28,8 @@ public class Tester {
     
     public Tester() {
         SoundPlayer player = new SoundPlayer();
-        player.setMedia(new MediaLocation(new File("testresources/test.flac")));
+        player.getFilters().add(new DelayFilter(4096*2*2*2*2, 3.0));
+        player.setMedia(new MediaLocation(new File("testresources/test.wav")));
         JFrame frame = new JFrame();
         frame.setBounds(100, 100, 400, 200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);

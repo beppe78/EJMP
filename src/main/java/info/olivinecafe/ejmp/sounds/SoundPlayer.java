@@ -1,12 +1,14 @@
 package info.olivinecafe.ejmp.sounds;
 
-import info.olivinecafe.ejmp.interfaces.AbstractMediaPlayer;
-import info.olivinecafe.ejmp.interfaces.Media;
-import info.olivinecafe.ejmp.interfaces.MediaPlayer;
+import info.olivinecafe.ejmp.media.AbstractMediaPlayer;
+import info.olivinecafe.ejmp.media.Media;
+import info.olivinecafe.ejmp.sounds.filters.SoundFilter;
 import info.olivinecafe.ejmp.utils.MediaLocation;
 import info.olivinecafe.ejmp.utils.MediaUtils;
 import info.olivinecafe.ejmp.utils.PlayerUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 音楽再生用のプレイヤー.
@@ -15,11 +17,12 @@ import info.olivinecafe.ejmp.utils.PlayerUtils;
  */
 @SuppressWarnings("rawtypes")
 public class SoundPlayer extends AbstractMediaPlayer {
-    private MediaPlayer player;
+    private AbstractSoundPlayer player;
     private double volume = 1.0;
     private double pan = 0.0;
     private boolean isFading = false;
     private double fadeVolume = 1.0;
+    private final List<SoundFilter> filters = new ArrayList<>();
 
     public SoundPlayer() {}
 
@@ -51,13 +54,16 @@ public class SoundPlayer extends AbstractMediaPlayer {
         }
         if(player == null) {
             if(player != null) player.stop();
-            player = PlayerUtils.createSuitablePlayer(media);
+            player = (AbstractSoundPlayer) PlayerUtils.createSuitablePlayer(media);
         }
         if(player != null) {
             if(player.getMedia() != media)
                 player.setMedia(media);
             player.setLoop(isLoop());
             player.setVolume(volume);
+            player.setPan(pan);
+            player.getFilters().clear();
+            player.getFilters().addAll(getFilters());
         }
     }
 
@@ -181,5 +187,25 @@ public class SoundPlayer extends AbstractMediaPlayer {
         this.pan = pan;
         if(player != null)
             player.setPan(pan);
+    }
+
+    /**
+     * このプレイヤーに適用されているフィルタの一覧を返す.
+     * @return このプレイヤーに適用されているフィルタの一覧
+     */
+    public List<SoundFilter> getFilters() {
+        return this.filters;
+    }
+    
+    public void addFilter(SoundFilter filter) {
+        this.filters.add(filter);
+        if(player != null)
+            player.getFilters().add(filter);
+    }
+    
+    public void clearFilter() {
+        this.filters.clear();
+        if(player != null)
+            player.getFilters().clear();
     }
 }

@@ -1,5 +1,4 @@
-package info.olivinecafe.ejmp.interfaces;
-
+package info.olivinecafe.ejmp.media;
 
 /**
  * 再生や停止が可能な何らかのメディアのプレイヤーが実装するインタフェース.

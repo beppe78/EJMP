@@ -1,4 +1,4 @@
-package info.olivinecafe.ejmp.interfaces;
+package info.olivinecafe.ejmp.media;
 
 import java.io.IOException;
 import java.net.URL;

@@ -1,6 +1,6 @@
 package info.olivinecafe.ejmp.utils;
 
-import info.olivinecafe.ejmp.interfaces.AbstractMedia;
+import info.olivinecafe.ejmp.media.AbstractMedia;
 import info.olivinecafe.ejmp.sounds.midi.MIDISound;
 import info.olivinecafe.ejmp.sounds.spi.AUSound;
 import info.olivinecafe.ejmp.sounds.spi.AiffSound;

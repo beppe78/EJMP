@@ -1,7 +1,8 @@
 package info.olivinecafe.ejmp.sounds.spi;
 
 import info.olivinecafe.ejmp.exceptions.StreamUnavailableException;
-import info.olivinecafe.ejmp.interfaces.AbstractMediaPlayer;
+import info.olivinecafe.ejmp.sounds.AbstractSoundPlayer;
+import info.olivinecafe.ejmp.sounds.filters.SoundFilter;
 import info.olivinecafe.ejmp.utils.PlayThread;
 import info.olivinecafe.ejmp.utils.PlayThread.Playable;
 
@@ -15,7 +16,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 
-public class SpiPlayer<SoundClass extends SpiSound> extends AbstractMediaPlayer<SoundClass> {
+public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer<SoundClass> {
     private SourceDataLine line;
     private boolean isPlaying = false;
     private double volume = 1.0;
@@ -25,10 +26,13 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractMediaPlayer<
     private SoundClass media;
     protected byte[] buffer = new byte[getBufferSize()];
     
-    
     protected int readStream(SpiSound media, byte[] buffer) throws StreamUnavailableException {
         try {
-            return media.getDecodedStream().read(buffer, 0, buffer.length);
+            int bytesRead = media.getDecodedStream().read(buffer, 0, buffer.length);
+            if(bytesRead > 0)
+                for(SoundFilter filter : getFilters())
+                    filter.filter(buffer, 0, bytesRead);
+            return bytesRead;
         } catch (IOException e) {
             throw new StreamUnavailableException(e);
         }
@@ -37,17 +41,15 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractMediaPlayer<
     private void createPlayThread(final SpiSound media) {
         createThread(new Playable() {
             public void play(PlayThread thread) {
-                final SourceDataLine line = getLine(media);
+                SourceDataLine line = getLine(media);
                 line.start();
                 isPlaying = true;
                 int currentRead = 0;
                 try {
                     while (isPlaying()) {
-                        if(thread.isEnd()) 
-                            break;
+                        if(thread.isEnd()) break;
                         currentRead = readStream(media, buffer);
-                        if (currentRead == -1) 
-                            break;
+                        if (currentRead == -1) break;
                         line.write(buffer, 0, currentRead);
                     }
                 } catch (IOException e) {
@@ -92,8 +94,8 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractMediaPlayer<
     private SourceDataLine getLine(SpiSound media) {
         try {
             if(line == null || !line.isOpen()) {
-                final AudioFormat format = media.getFormat();
-                final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+                AudioFormat format = media.getFormat();
+                DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
                 line = (SourceDataLine) AudioSystem.getLine(info);
                 if(buffer.length != getBufferSize())
                     buffer = new byte[getBufferSize()];
@@ -144,7 +146,7 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractMediaPlayer<
     public void setPan(double pan) {
         if(line != null && line.isOpen()) {
             try {
-                final FloatControl panControl = 
+                FloatControl panControl = 
                         (FloatControl)line.getControl(FloatControl.Type.PAN);
                 float value = (float)pan;
                 if(value > 1.0) value = 1.0f;
@@ -185,6 +187,8 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractMediaPlayer<
     }
 
     public void setBufferSize(int bufferSize) {
+        if(bufferSize % 2 != 0)
+            throw new IllegalArgumentException("buffer size should be an even number");
         this.bufferSize = bufferSize;
     }
 }
