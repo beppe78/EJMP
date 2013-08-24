@@ -197,6 +197,7 @@ public class SoundPlayer extends AbstractMediaPlayer {
         return this.filters;
     }
     
+    @SuppressWarnings("unchecked")
     public void addFilter(SoundFilter filter) {
         this.filters.add(filter);
         if(player != null)

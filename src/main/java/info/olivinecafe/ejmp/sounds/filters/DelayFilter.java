@@ -1,7 +1,6 @@
 package info.olivinecafe.ejmp.sounds.filters;
 
 public class DelayFilter extends RawDelayFilter {
-
     /**
      * サウンドにディレイをかけるフィルタ.
      * @param delayLength ディレイの長さ（サンプル数）
@@ -15,7 +14,7 @@ public class DelayFilter extends RawDelayFilter {
     public void setFeedBackGain(double a) {
         //極端なaの値を修正
         if(a > 1.0) a = 1.0;
-        if(a < 0) a = 0;
+        if(a <= 0) { a = 0; b = 1; super.setFeedBackGain(a); return;}
         super.setFeedBackGain(a);
         //音割れを防ぐ(元の音圧より増幅されないようにする)には b(ab+1)<1
         b = ((Math.sqrt(4 * a + 1) - 1) / (2 * a));

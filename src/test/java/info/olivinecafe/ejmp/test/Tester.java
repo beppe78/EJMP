@@ -25,10 +25,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Tester {
+    private final SoundPlayer player = new SoundPlayer();
+    private final DelayFilter delayFilter = new DelayFilter((int)Math.pow(2, 15), 0.0);
     
     public Tester() {
-        SoundPlayer player = new SoundPlayer();
-        player.getFilters().add(new DelayFilter(4096*2*2*2*2, 3.0));
+        player.getFilters().add(delayFilter);
         player.setMedia(new MediaLocation(new File("testresources/test.wav")));
         JFrame frame = new JFrame();
         frame.setBounds(100, 100, 400, 200);
@@ -40,7 +41,7 @@ public class Tester {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-    private static void createSoundPlayerAddons(final SoundPlayer player, final Box wrapper) {
+    private void createSoundPlayerAddons(final SoundPlayer player, final Box wrapper) {
         Box buttonsB = new Box(BoxLayout.X_AXIS);
         buttonsB.add(new JButton(new AbstractAction("fadeIn") {
             public void actionPerformed(ActionEvent e) {
@@ -61,7 +62,7 @@ public class Tester {
         wrapper.add(buttonsB);
     }
     
-    private static void createComponents(final MediaPlayer player, final Box wrapper) {
+    private void createComponents(final MediaPlayer player, final Box wrapper) {
         Box buttonsA = new Box(BoxLayout.X_AXIS);
         buttonsA.add(new JButton(new AbstractAction("play") {
             public void actionPerformed(ActionEvent e) {
@@ -102,10 +103,17 @@ public class Tester {
                 player.setPan((double)pan.getValue()/100);
             }
         });
+        final JSlider delay = new JSlider(0, 100, (int)(delayFilter.getFeedBackGain()*100));
+        delay.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                delayFilter.setFeedBackGain((double) delay.getValue() / 100);
+            }
+        });
         wrapper.add(buttonsA);
         wrapper.add(isLoop);
         wrapper.add(volume);
         wrapper.add(pan);
+        wrapper.add(delay);
     }
     
     private static void createMidiAddons(final MIDIPlayer player, final Box wrapper) {
