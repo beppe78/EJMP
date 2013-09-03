@@ -8,8 +8,14 @@ import java.net.URL;
 
 import javax.sound.midi.Synthesizer;
 
-
-public class MIDIPlayer extends SpiPlayer<MIDISound> {
+/**
+ * SPI形式とのインタフェースの共存が上手くいかないので保留中.
+ * Streamに書き出してからフィルタすると遅延で使い物にならないので、
+ * シーケンスデータそのものを動的に加工してシーケンサまでは直通という形を取る必要がありそう
+ * @author tohhy
+ */
+@Deprecated
+public class MIDIPlayer extends SpiPlayer {
 
     private MIDISound media;
     
@@ -47,9 +53,6 @@ public class MIDIPlayer extends SpiPlayer<MIDISound> {
         media.init(synth);
     }
 
-    /*
-     * getter/setter
-     */
     public void setTick(long tick) {
         if(media != null && media.getSequencer() != null)
             media.getSequencer().setTickPosition(tick);

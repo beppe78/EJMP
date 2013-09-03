@@ -1,7 +1,7 @@
 package info.olivinecafe.ejmp.sounds.midi;
 
+import info.olivinecafe.ejmp.media.MediaLocation;
 import info.olivinecafe.ejmp.sounds.spi.SpiSound;
-import info.olivinecafe.ejmp.utils.MediaLocation;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -23,6 +23,11 @@ import com.sun.media.sound.AudioSynthesizer;
 import com.sun.media.sound.SF2Soundbank;
 import com.sun.media.sound.SoftSynthesizer;
 
+/**
+ * 
+ * @author tohhy
+ */
+@Deprecated
 public class MIDISound extends SpiSound {
     private AudioInputStream stream;
     private Synthesizer synth;

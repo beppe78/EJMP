@@ -35,7 +35,7 @@ public class Fade {
     private void startTimer() {
         final double defaultVolume = player.getVolume();
         final int taskCount = (time/taskPeriod);
-        final double dVolume = (toVolume - defaultVolume)/taskCount;
+        final double volumeGap = (toVolume - defaultVolume);
 
         //フェード開始、初期ボリュームをプレイヤーのボリュームに合わせる
         player.setFading(true);
@@ -48,7 +48,9 @@ public class Fade {
                     timer.cancel();
                     return;
                 }
-                player.setFadeVolume((player.getFadeVolume() + dVolume));
+                double dVolume = volumeGap / taskCount;
+                double newVolume = player.getFadeVolume() + dVolume;
+                player.setFadeVolume(newVolume);
                 if(dVolume > 0) {
                     if(player.getFadeVolume() >= toVolume) {
                         endTask.run();

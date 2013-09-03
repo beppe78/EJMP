@@ -1,19 +1,22 @@
 package info.olivinecafe.ejmp.utils;
 
 import info.olivinecafe.ejmp.media.AbstractMedia;
-import info.olivinecafe.ejmp.sounds.midi.MIDISound;
+import info.olivinecafe.ejmp.media.Media;
+import info.olivinecafe.ejmp.media.MediaLocation;
+import info.olivinecafe.ejmp.media.MediaPlayer;
 import info.olivinecafe.ejmp.sounds.spi.AUSound;
 import info.olivinecafe.ejmp.sounds.spi.AiffSound;
 import info.olivinecafe.ejmp.sounds.spi.ApeSound;
 import info.olivinecafe.ejmp.sounds.spi.FlacSound;
 import info.olivinecafe.ejmp.sounds.spi.Mp3Sound;
 import info.olivinecafe.ejmp.sounds.spi.OggSound;
+import info.olivinecafe.ejmp.sounds.spi.SpiPlayer;
 import info.olivinecafe.ejmp.sounds.spi.WaveSound;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class MediaUtils {
+public class GenericUtils {
     
     /**
      * メディアURLの拡張子から判断して適切なメディアを返す.
@@ -46,10 +49,11 @@ public class MediaUtils {
         } else if(ext.equals("ogg") || ext.equals("ogx") || ext.equals("oga")) {
             return OggSound.class;
         } else if(ext.equals("aac") || ext.equals("mp4") || ext.equals("m4a") || ext.equals("m4r")) {
-//            return AACSound.class;
             //未対応
+//            return AACSound.class;
         } else if(ext.equals("mid") || ext.equals("midi")) {
-            return MIDISound.class;
+            //調整中
+//            return MIDISound.class;
         } else if(ext.equals("ape")) {
             return ApeSound.class;
         }
@@ -83,6 +87,47 @@ public class MediaUtils {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+    
+    /**
+     * メディアから適切なプレイヤーを生成して返す.
+     * @param media プレイヤーに対応するメディア
+     * @return 適切なメディアプレイヤー
+     */
+    public static MediaPlayer createSuitablePlayer(Media media) {
+        if(media != null) {
+            try {
+                return getSuitablePlayerInstance(media);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+        System.err.println("can't create player for:" + media);
+        return null;
+    }
+
+    /**
+     * メディアから適切なプレイヤーを生成して返す.
+     * @param media プレイヤーに対応するメディア
+     * @return 拡張子に対応したメディアプレイヤー
+     */
+    private static MediaPlayer getSuitablePlayerInstance(Media media) {
+//        if(media instanceof MIDISound) {
+//            return new MIDIPlayer();
+//        } else 
+            if(media instanceof Mp3Sound
+                || media instanceof WaveSound
+                || media instanceof AUSound
+                || media instanceof OggSound
+                || media instanceof AiffSound
+//                || media instanceof AACSound
+                || media instanceof FlacSound
+                || media instanceof ApeSound) {
+            return new SpiPlayer();
         }
         return null;
     }

@@ -1,4 +1,4 @@
-package info.olivinecafe.ejmp.utils;
+package info.olivinecafe.ejmp.media;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -40,7 +40,8 @@ public class MediaLocation {
      */
     public MediaLocation(String resourcePath) {
         this.url = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
-        if(getUrl() == null) throw new IllegalArgumentException("resource not found: " + resourcePath);
+        if(getUrl() == null) 
+            throw new IllegalArgumentException("resource not found: " + resourcePath);
     }
     
     /**

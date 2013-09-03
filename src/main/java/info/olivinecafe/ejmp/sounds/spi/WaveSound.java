@@ -3,7 +3,7 @@ package info.olivinecafe.ejmp.sounds.spi;
 
 import javax.sound.sampled.AudioInputStream;
 
-import info.olivinecafe.ejmp.utils.MediaLocation;
+import info.olivinecafe.ejmp.media.MediaLocation;
 
 
 public class WaveSound extends SpiSound {

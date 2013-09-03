@@ -1,8 +1,15 @@
 package info.olivinecafe.ejmp.sounds.filters;
 
+/**
+ * サウンドにディレイをかけるフィルタ.
+ * 一般的な利用に支障が出ないよう適用数値に補正をかけている.
+ * 柔軟にカスタムしたい場合はRawDelayFilterを用いる.
+ * @author tohhy
+ */
 public class DelayFilter extends RawDelayFilter {
+    
     /**
-     * サウンドにディレイをかけるフィルタ.
+     * ディレイフィルタを初期化する.
      * @param delayLength ディレイの長さ（サンプル数）
      * @param feedBackGain フィードバックの強さ（0.0~1.0）
      */
@@ -14,8 +21,7 @@ public class DelayFilter extends RawDelayFilter {
      * フィードバックゲインを指定する.
      * 過去のサウンドがこの倍率をかけられて現在のサウンドに加算される.
      * ゲインは0.0~1.0まで許容され、範囲外の値は丸められる.
-     * 音割れが生じないようにゲインの大きさに応じてディレイ加算後の音圧に自動で補正がかかる.
-     * 補正をかけない場合RawDelayFilterを使う.
+     * 音割れ防止のため、ゲインの大きさに応じてディレイ加算後の音圧に自動で補正をかけている.
      * @param feedBackGain フィードバックゲイン
      */
     @Override

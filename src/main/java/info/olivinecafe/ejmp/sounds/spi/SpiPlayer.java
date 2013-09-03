@@ -21,14 +21,14 @@ import javax.sound.sampled.SourceDataLine;
  * @author tohhy
  * @param <SoundClass>
  */
-public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer {
+public class SpiPlayer extends AbstractSoundPlayer {
     private SourceDataLine line;
     private boolean isPlaying = false;
     private double volume = 1.0;
     private double pan = 0.0;
     private PlayThread playThread;
     private int bufferSize = 20480;
-    private Media media;
+    private SpiSound media;
     protected byte[] buffer = new byte[getBufferSize()];
     
     protected int readStream(SpiSound media, byte[] buffer) throws StreamUnavailableException {
@@ -116,7 +116,7 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer 
 
     public void play() {
         if(getMedia() != null && !isPlaying()) {
-            createPlayThread((SoundClass) getMedia());
+            createPlayThread(media);
             startThread();
         }
     }
@@ -177,13 +177,16 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer 
         return pan;
     }
 
-    public Media getMedia() {
+    public SpiSound getMedia() {
         return media;
     }
 
     public void setMedia(Media media) {
-        if(getMedia() != media) {
-            this.media = media;
+        if(!(media instanceof SpiSound)) {
+            throw new IllegalArgumentException("received media is not SPISound");
+        }
+        if(this.media != media) {
+            this.media = (SpiSound) media;
             rewind();
         }
     }

@@ -1,10 +1,9 @@
 package info.olivinecafe.ejmp.sounds;
 
 import info.olivinecafe.ejmp.media.Media;
+import info.olivinecafe.ejmp.media.MediaLocation;
 import info.olivinecafe.ejmp.sounds.filters.SoundFilter;
-import info.olivinecafe.ejmp.utils.MediaLocation;
-import info.olivinecafe.ejmp.utils.MediaUtils;
-import info.olivinecafe.ejmp.utils.PlayerUtils;
+import info.olivinecafe.ejmp.utils.GenericUtils;
 
 /**
  * 音楽再生用のプレイヤー.
@@ -29,7 +28,8 @@ public class SoundPlayer extends AbstractSoundPlayer {
             System.err.println("preparePlayer: received media is null");
             return null;
         }
-        AbstractSoundPlayer result = (AbstractSoundPlayer) PlayerUtils.createSuitablePlayer(media);
+        AbstractSoundPlayer result = 
+                (AbstractSoundPlayer) GenericUtils.createSuitablePlayer(media);
         result.setMedia(media);
         applySettingsToPlayer(result);
         return result;
@@ -133,7 +133,7 @@ public class SoundPlayer extends AbstractSoundPlayer {
     }
 
     public void setMedia(MediaLocation location) {
-        setMedia(MediaUtils.createSuitableMedia(location));
+        setMedia(GenericUtils.createSuitableMedia(location));
     }
 
     public void setMedia(Media media) {

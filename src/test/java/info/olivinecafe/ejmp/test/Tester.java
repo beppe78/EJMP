@@ -1,10 +1,9 @@
 package info.olivinecafe.ejmp.test;
 
-import info.olivinecafe.ejmp.media.MediaPlayer;
+import info.olivinecafe.ejmp.media.MediaLocation;
 import info.olivinecafe.ejmp.sounds.SoundPlayer;
 import info.olivinecafe.ejmp.sounds.filters.DelayFilter;
 import info.olivinecafe.ejmp.sounds.midi.MIDIPlayer;
-import info.olivinecafe.ejmp.utils.MediaLocation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,30 +15,29 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+@SuppressWarnings("serial")
 public class Tester {
     private final SoundPlayer player = new SoundPlayer();
     private final DelayFilter delayFilter = new DelayFilter((int)Math.pow(2, 15), 0.0);
     
+    private String baseFileName = "testresources/test.";
+    
     public Tester() {
+        MediaLocation media = getTestMedia("aiff");
+        player.setMedia(media);
         player.getFilters().add(delayFilter);
-        player.setMedia(new MediaLocation(new File("testresources/test.aiff")));
-        JFrame frame = new JFrame();
-        frame.setBounds(100, 100, 400, 200);
         Box wrapper = new Box(BoxLayout.Y_AXIS);
-        createComponents(player, wrapper);
         createSoundPlayerAddons(player, wrapper);
-        frame.add(wrapper);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        createSoundComponents(wrapper);
+        new TestWindow(player, wrapper);
     }
     
+
     private void createSoundPlayerAddons(final SoundPlayer player, final Box wrapper) {
         Box buttonsB = new Box(BoxLayout.X_AXIS);
         buttonsB.add(new JButton(new AbstractAction("fadeIn") {
@@ -60,58 +58,20 @@ public class Tester {
         wrapper.add(buttonsB);
     }
     
-    private void createComponents(final MediaPlayer player, final Box wrapper) {
-        Box buttonsA = new Box(BoxLayout.X_AXIS);
-        buttonsA.add(new JButton(new AbstractAction("play") {
-            public void actionPerformed(ActionEvent e) {
-                player.play();
-            }
-        }));
-        buttonsA.add(new JButton(new AbstractAction("stop") {
-            public void actionPerformed(ActionEvent e) {
-                player.stop();
-            }
-        }));
-        buttonsA.add(new JButton(new AbstractAction("restart") {
-            public void actionPerformed(ActionEvent e) {
-                player.restart();
-            }
-        }));
+    private void createSoundComponents(final Box wrapper) {
 
-        buttonsA.add(new JButton(new AbstractAction("rewind") {
-            public void actionPerformed(ActionEvent e) {
-                player.rewind();
-            }
-        }));
-        
-        JCheckBox isLoop = new JCheckBox(new AbstractAction("isLoop") {
-            public void actionPerformed(ActionEvent e) {
-                player.setLoop(((JCheckBox)e.getSource()).isSelected());
-            }
-        });
-        final JSlider volume = new JSlider(0, 200, 100);
-        volume.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                player.setVolume((double)volume.getValue()/100);
-            }
-        });
-        final JSlider pan = new JSlider(-100, 100, 0);
-        pan.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                player.setPan((double)pan.getValue()/100);
-            }
-        });
         final JSlider delay = new JSlider(0, 100, (int)(delayFilter.getFeedBackGain()*100));
         delay.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 delayFilter.setFeedBackGain((double) delay.getValue() / 100);
             }
         });
-        wrapper.add(buttonsA);
-        wrapper.add(isLoop);
-        wrapper.add(volume);
-        wrapper.add(pan);
+        
         wrapper.add(delay);
+    }
+    
+    private MediaLocation getTestMedia(String ext) {
+        return new MediaLocation(new File(baseFileName + ext));
     }
     
     private static void createMidiAddons(final MIDIPlayer player, final Box wrapper) {
@@ -140,6 +100,7 @@ public class Tester {
         wrapper.add(tick);
         wrapper.add(soundfonts);
     }
+
 
     public static void main(String[] args) {
         new Tester();
