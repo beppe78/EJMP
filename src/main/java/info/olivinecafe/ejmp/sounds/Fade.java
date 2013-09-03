@@ -3,6 +3,10 @@ package info.olivinecafe.ejmp.sounds;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * 
+ * @author tohhy
+ */
 public class Fade {
     private final SoundPlayer player;
     private final double toVolume;

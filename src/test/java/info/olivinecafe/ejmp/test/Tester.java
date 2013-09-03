@@ -44,12 +44,12 @@ public class Tester {
         Box buttonsB = new Box(BoxLayout.X_AXIS);
         buttonsB.add(new JButton(new AbstractAction("fadeIn") {
             public void actionPerformed(ActionEvent e) {
-                player.fadeIn(500);
+                player.fadeIn(5000);
             }
         }));
         buttonsB.add(new JButton(new AbstractAction("fadeOut") {
             public void actionPerformed(ActionEvent e) {
-                player.fade(0.0, 500);
+                player.fadeOut(5000);
             }
         }));
         buttonsB.add(new JButton(new AbstractAction("stopFade") {
@@ -57,7 +57,6 @@ public class Tester {
                 player.stopFade();
             }
         }));
-
         wrapper.add(buttonsB);
     }
     

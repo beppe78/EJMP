@@ -3,8 +3,16 @@ package info.olivinecafe.ejmp.media;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * 任意のメディアを表すインタフェース.
+ * @author tohhy
+ */
 public interface Media {
     
+    /**
+     * メディアの形式を表す.
+     * @author tohhy
+     */
     public enum MediaType {
         WAVE, AIFF, AU,
         MP3, AAC, OGG, WMA,
@@ -43,5 +51,4 @@ public interface Media {
      * @return このメディアのURL
      */
     public URL getURL();
-
 }

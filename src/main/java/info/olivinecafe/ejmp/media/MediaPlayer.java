@@ -5,59 +5,58 @@ package info.olivinecafe.ejmp.media;
  * プレイヤーは適宜スレッドを用いてブロックせずに再生処理を行えるようにする.
  * @author tohhy
  */
-public interface MediaPlayer<T extends Media> {
+public interface MediaPlayer {
 
     /**
      * 再生するメディアをセットする.
-     * @param file 再生するメディア
+     * @param media 再生するメディア
      */
-    public void setMedia(T media);
+    public void setMedia(Media media);
 
     /**
      * 再生中のメディアを取得する.
-     * @return file 再生するメディアが保存されたファイル
+     * @return media 再生するメディアオブジェクト
      */
-    public T getMedia();
+    public Media getMedia();
 
     /**
      * メディアを再生する.
      * 途中で停止されている場合はその停止位置から再開する.
-     * new Thread(this)を生成してstartする処理を記述し、
-     * 再生自体はrunメソッド内で行うようにする
+     * 再生は別スレッドで行われ、他の処理をブロックしない.
      */
     public void play();
 
     /**
-     * メディアを頭から再生する.
+     * このプレイヤーを巻き戻し、メディアを頭から再生する.
      */
     public void restart();
     
     /**
-     * メディアを頭まで巻き戻す.
+     * このプレイヤーを頭まで巻き戻す.
      */
     public void rewind();
 
     /**
-     * メディアの再生を停止する.
-     * 停止後にplayを呼び出した場合、停止した時点から再開できるようにする.
+     * このプレイヤーの再生を停止する.
+     * 停止後にplayを呼び出した場合、停止した時点から再開できる.
      */
     public void stop();
 
     /**
-     * メディアが現在再生中であるかどうかを返す.
-     * @return
+     * このプレイヤーが現在再生中であるかどうかを返す.
+     * @return メディアが現在再生中であるかどうか
      */
     public boolean isPlaying();
 
     /**
-     * リピートが設定されているかどうかを返す.
-     * @return
+     * このプレイヤーにリピートが設定されているかどうかを返す.
+     * @return リピートの有無
      */
     public boolean isLoop();
 
     /**
-     * リピートの有無を設定する.
-     * @param isRepeat
+     * このプレイヤーのリピートの有無を設定する.
+     * @param isRepeat リピートの有無
      */
     public void setLoop(boolean isRepeat);
     

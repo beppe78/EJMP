@@ -1,67 +1,45 @@
 package info.olivinecafe.ejmp.sounds;
 
-import info.olivinecafe.ejmp.media.AbstractMediaPlayer;
 import info.olivinecafe.ejmp.media.Media;
 import info.olivinecafe.ejmp.sounds.filters.SoundFilter;
 import info.olivinecafe.ejmp.utils.MediaLocation;
 import info.olivinecafe.ejmp.utils.MediaUtils;
 import info.olivinecafe.ejmp.utils.PlayerUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 音楽再生用のプレイヤー.
  * setMediaでファイルやリソースを与えてplay()を呼び出すと、
  * メディアの拡張子から判断してその形式に対し適切なプレイヤーを内部で生成して実行する.
  */
-@SuppressWarnings("rawtypes")
-public class SoundPlayer extends AbstractMediaPlayer {
+public class SoundPlayer extends AbstractSoundPlayer {
     private AbstractSoundPlayer player;
-    private double volume = 1.0;
-    private double pan = 0.0;
-    private boolean isFading = false;
-    private double fadeVolume = 1.0;
-    private final List<SoundFilter> filters = new ArrayList<>();
 
+    /**
+     * サウンドプレイヤーを初期化する.
+     */
     public SoundPlayer() {}
 
-    public void setMedia(MediaLocation location) {
-        setMedia(MediaUtils.createSuitableMedia(location));
+    private void setPlayer(AbstractSoundPlayer player) {
+        if(player != null) player.stop();
+        this.player = player;
     }
     
-    public void setMedia(Media media) {
-        preparePlayer(media);
-    }
-    
-    public Media getMedia() {
-        if(player != null)
-            return player.getMedia();
-        return null;
-    }
-
-    public void setLoop(boolean isRepeat) {
-        super.setLoop(isRepeat);
-        if(player != null)
-            player.setLoop(isRepeat);
-    }
-    
-    @SuppressWarnings("unchecked")
-    private void preparePlayer(Media media) {
+    private AbstractSoundPlayer createNewPlayer(Media media) {
         if(media == null) {
             System.err.println("preparePlayer: received media is null");
-            return;
+            return null;
         }
-        if(player == null) {
-            if(player != null) player.stop();
-            player = (AbstractSoundPlayer) PlayerUtils.createSuitablePlayer(media);
-        }
+        AbstractSoundPlayer result = (AbstractSoundPlayer) PlayerUtils.createSuitablePlayer(media);
+        result.setMedia(media);
+        applySettingsToPlayer(result);
+        return result;
+    }
+    
+    private void applySettingsToPlayer(AbstractSoundPlayer player) {
         if(player != null) {
-            if(player.getMedia() != media)
-                player.setMedia(media);
             player.setLoop(isLoop());
-            player.setVolume(volume);
-            player.setPan(pan);
+            player.setVolume(getVolume());
+            player.setPan(getPan());
             player.getFilters().clear();
             player.getFilters().addAll(getFilters());
         }
@@ -72,7 +50,11 @@ public class SoundPlayer extends AbstractMediaPlayer {
      * 途中で停止されている場合はその停止位置から再開する.
      */
     public void play() {
-        preparePlayer(getMedia());
+        if(player == null) {
+            setPlayer(createNewPlayer(getMedia()));
+        } else {
+            applySettingsToPlayer(player);
+        }
         player.play();
     }
 
@@ -90,54 +72,39 @@ public class SoundPlayer extends AbstractMediaPlayer {
             player.rewind();
     }
 
-    public boolean isPlaying() {
+    @Override
+    public void addFilter(SoundFilter filter) {
+        super.addFilter(filter);
         if(player != null)
-            return player.isPlaying();
-        return false;
+            player.getFilters().add(filter);
     }
 
-    public double getVolume() {
+    @Override
+    public void clearFilter() {
+        super.clearFilter();
         if(player != null)
-            return player.getVolume();
-        return this.volume;
+            player.getFilters().clear();
     }
 
-    public void setVolume(double volume) {
-        this.volume = volume;
-        if(player != null)
-            player.setVolume(volume);
+    /**
+     * フェードを途中で停止する.終了時アクションは実行されない.
+     * プレイヤーの音量はその時点のフェード音量になる.
+     */
+    public void stopFade() {
+        setFading(false);
+        setVolume(getFadeVolume());
     }
 
-    public double getFadeVolume() {
-        return fadeVolume;
-    }
-
-    public boolean isFading() {
-        return isFading;
-    }
-    
-    public void fade(double toVolume, int timeMs) {
-        if(!isFading) {
-            new Fade(this, toVolume, timeMs);
-        }
-    }
-    
-    public void fade(double toVolume, int timeMs, Runnable endAction) {
-        if(!isFading) {
-            new Fade(this, toVolume, timeMs, endAction);
-        }
-    }
     
     /**
      * ボリューム0から現在のボリュームに向かってフェードインする再生を開始する.
      */
     public void fadeIn(int timeMs) {
-        if(!isFading) {
-            stop();
-            final double toVolume = volume;
-            this.setVolume(0);
+        if(!isFading()) {
+            double toVolume = getVolume();
+            setVolume(0);
             play();
-            fade(toVolume, timeMs);
+            new Fade(this, toVolume, timeMs);
         }
     }
     
@@ -146,67 +113,61 @@ public class SoundPlayer extends AbstractMediaPlayer {
      * フェードアウト後は自動で停止し、ボリュームはフェードアウト前のボリュームに変更される.
      */
     public void fadeOut(int timeMs) {
-        if(!isFading) {
-            final double currentVolume = volume;
+        if(!isFading()) {
+            final double currentVolume = getVolume();
             play();
-            fade(0, timeMs, new Runnable() {
+            Runnable endAction = new Runnable() {
                 public void run() {
                     stop();
-                    volume = currentVolume;
+                    setVolume(currentVolume);
                 }
-            });
+            };
+            //フェードを実行
+            new Fade(this, 0, timeMs, endAction);
         }
     }
     
-    /**
-     * フェードを途中で停止する.終了時アクションは実行されない.
-     * プレイヤーの音量はその時点のフェード音量になる.
-     */
-    public void stopFade() {
-        this.isFading = false;
-        this.volume = fadeVolume;
-    }
-
     protected void setFadeVolume(double fadeVolume) {
-        this.fadeVolume = fadeVolume;
-        if(isFading)
-            player.setVolume(fadeVolume);
+        super.setFadeVolume(fadeVolume);
+        if(isFading()) player.setVolume(fadeVolume);
     }
 
-    protected void setFading(boolean isFading) {
-        this.isFading = isFading;
+    public void setMedia(MediaLocation location) {
+        setMedia(MediaUtils.createSuitableMedia(location));
     }
 
-    public double getPan() {
+    public void setMedia(Media media) {
+        setPlayer(createNewPlayer(media));
+    }
+
+    public Media getMedia() {
         if(player != null)
-            return player.getPan();
-        return this.pan;
+            return player.getMedia();
+        return null;
+    }
+
+    public void setLoop(boolean isRepeat) {
+        super.setLoop(isRepeat);
+        if(player != null)
+            player.setLoop(isRepeat);
+    }
+
+    public void setVolume(double volume) {
+        super.setVolume(volume);
+        if(player != null)
+            player.setVolume(volume);
     }
 
     public void setPan(double pan) {
-        this.pan = pan;
+        super.setPan(pan);
         if(player != null)
             player.setPan(pan);
     }
 
-    /**
-     * このプレイヤーに適用されているフィルタの一覧を返す.
-     * @return このプレイヤーに適用されているフィルタの一覧
-     */
-    public List<SoundFilter> getFilters() {
-        return this.filters;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public void addFilter(SoundFilter filter) {
-        this.filters.add(filter);
+    public boolean isPlaying() {
         if(player != null)
-            player.getFilters().add(filter);
+            return player.isPlaying();
+        return false;
     }
-    
-    public void clearFilter() {
-        this.filters.clear();
-        if(player != null)
-            player.getFilters().clear();
-    }
+
 }

@@ -1,6 +1,7 @@
 package info.olivinecafe.ejmp.sounds.spi;
 
 import info.olivinecafe.ejmp.exceptions.StreamUnavailableException;
+import info.olivinecafe.ejmp.media.Media;
 import info.olivinecafe.ejmp.sounds.AbstractSoundPlayer;
 import info.olivinecafe.ejmp.sounds.filters.SoundFilter;
 import info.olivinecafe.ejmp.utils.PlayThread;
@@ -15,15 +16,19 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
-
-public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer<SoundClass> {
+/**
+ * Java Sound APIを使ってサウンドを再生する.
+ * @author tohhy
+ * @param <SoundClass>
+ */
+public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer {
     private SourceDataLine line;
     private boolean isPlaying = false;
     private double volume = 1.0;
     private double pan = 0.0;
     private PlayThread playThread;
     private int bufferSize = 20480;
-    private SoundClass media;
+    private Media media;
     protected byte[] buffer = new byte[getBufferSize()];
     
     protected int readStream(SpiSound media, byte[] buffer) throws StreamUnavailableException {
@@ -111,7 +116,7 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer<
 
     public void play() {
         if(getMedia() != null && !isPlaying()) {
-            createPlayThread(getMedia());
+            createPlayThread((SoundClass) getMedia());
             startThread();
         }
     }
@@ -134,9 +139,10 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer<
     
     public void setVolume(double volume) {
         if(line != null && line.isOpen()) {
-            final FloatControl volumeControl = 
+            if(volume <= 0) volume = 0.001;
+            FloatControl volumeControl = 
                     (FloatControl)line.getControl(FloatControl.Type.MASTER_GAIN);
-            float value = (float)Math.log10(volume) * 20;
+            float value = (float)(Math.log10(volume) * 20);
             if(value < volumeControl.getMaximum() && value > volumeControl.getMinimum())
                 volumeControl.setValue(value);
         }
@@ -153,7 +159,7 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer<
                 if(value < -1.0) value = -1.0f;
                 panControl.setValue(value);
             } catch (IllegalArgumentException e) {
-                System.err.println("EJMP : pan unsupported");
+                System.err.println("EJMP: pan unsupported");
             }
         }
         this.pan = pan;
@@ -171,11 +177,11 @@ public class SpiPlayer<SoundClass extends SpiSound> extends AbstractSoundPlayer<
         return pan;
     }
 
-    public SoundClass getMedia() {
+    public Media getMedia() {
         return media;
     }
 
-    public void setMedia(SoundClass media) {
+    public void setMedia(Media media) {
         if(getMedia() != media) {
             this.media = media;
             rewind();
